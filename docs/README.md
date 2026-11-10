@@ -7,6 +7,6 @@ domain model live in the
 | Document | Content | Status |
 |---|---|---|
 | [`api-contracts.md`](./api-contracts.md) | REST endpoints, DTOs, errors, JSON schemas | Draft |
-| `data-model.md` | PostgreSQL schema (ERD) | Planned |
+| [`data-model.md`](./data-model.md) | PostgreSQL schema (ERD), Prisma | Draft |
 | `architecture.md` | Layers, dependency rule, stack, patterns, AOP, decisions | Planned |
 | `diagrams/` | Class and layer diagrams (image + editable source) | Planned |
