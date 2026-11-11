@@ -70,6 +70,25 @@ One entry per significant use. Copy the template.
 - **Lessons / limitations:** shared skills live in both repositories and must
   be kept identical by hand.
 
+### 2026-11-11 — Corrections from the plan and documentation review
+
+- **Tool / model:** Claude Code, claude-fable-5-1.
+- **Issue / PR:** no issue; branch `claude/tender-babbage-cx0n60`, twin of
+  the client branch of the same name.
+- **Prompt (paraphrase):** review the implementation plan and the documents
+  of both repositories and open a pull request correcting inconsistencies,
+  missing files and wrong data.
+- **Result:** `api-contracts.md` says `stars` is `null` for `hexa-sort`
+  (it said 1–3 for both level games, against `data-model.md` and RN-25);
+  `docs/README.md` links the client's `architecture.md` and the plan instead
+  of planning a copy; `CONTRIBUTING.md` references the PR template, fixes
+  the footer example and lists the files shared with the client.
+- **Team modifications:** to be recorded after the review of the pull
+  request.
+- **Lessons / limitations:** see the client's `AI_USAGE.md` entry of the
+  same date; the findings are in the client's
+  `docs/plan-review-2026-11-11.md`.
+
 ## 3. Critical evaluation
 
 To be completed at the end of the project.

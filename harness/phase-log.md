@@ -7,3 +7,4 @@ details live in the PR.
 |---|---|---|---|---|---|
 | 2026-11-10 | Repository skeleton (docs, harness, templates) | — | PepeTza | — | No code yet |
 | 2026-11-11 | Shared agent skills | #7 | PepeTza | — | Docs only; api-endpoint + 3 skills shared with the client (#12) |
+| 2026-11-11 | Corrections from the plan and documentation review (contract, docs index, contributing) | — (branch `claude/tender-babbage-cx0n60`) | PepeTza | — | Docs only; twin of the client PR; findings in the client's `docs/plan-review-2026-11-11.md` |
