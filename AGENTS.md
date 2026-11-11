@@ -20,7 +20,8 @@ explainability over cleverness.
 
 ### This repository: backend
 
-- NestJS + TypeScript API, PostgreSQL (Supabase) and the admin web panel.
+- NestJS + TypeScript API and PostgreSQL (Supabase). The admin web panel
+  lives in the client repo and uses this API.
 - The API contract is [`docs/api-contracts.md`](./docs/api-contracts.md).
   Do not change an endpoint, DTO or error code without updating that file in
   the same PR and getting approval: the mobile client depends on it.
