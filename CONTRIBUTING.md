@@ -48,12 +48,12 @@ the issue.
 ### Branch protection on `main` (both repos)
 
 - Require a pull request before merging.
-- Require **1 approval** from a teammate other than the author.
-- Dismiss stale approvals when new commits are pushed.
 - Require status checks to pass (CI: lint, type-check, tests).
 - Require conversation resolution before merging.
 - Require linear history.
 - Block force pushes and deletion.
+- Do not allow bypassing these rules, not even for administrators: every
+  change is recorded in a pull request.
 
 ---
 
@@ -182,13 +182,17 @@ A `pre-commit` hook also runs lint and formatting on staged files
 
 ### Review
 
-- At least **1 approval from a teammate who is not the author**. Self-approval
-  is not allowed.
-- CI must be green.
+Review is a team norm, not a technical block: `main` does not require an
+approval, so a PR never waits for a teammate who is not available.
+
+- When opening the PR, the author requests a review from a teammate.
+- The author may merge as soon as CI is green and the Definition of Done (§6)
+  is met, without waiting for the review.
 - The reviewer checks behaviour **and** design: layer rule, patterns used as
   documented, no logic in the UI, tests that test something real.
 - The reviewer must be able to explain the change. If they cannot, they ask
   before approving.
+- Teammates can also review after the merge, by commenting on the closed PR.
 - Resolve every conversation before merging. The author merges.
 
 ### Merge strategy: **rebase and merge**
@@ -259,7 +263,7 @@ A task is done when **all** of these are true:
 - [ ] Compiles in strict mode; lint passes with no warnings.
 - [ ] Tests written and passing; coverage ≥ 80 % in domain and use cases.
 - [ ] CI green on the PR.
-- [ ] Reviewed and approved by a teammate.
+- [ ] Review requested from a teammate (§3).
 - [ ] Layer rule respected; no business logic in the UI.
 - [ ] Acceptance criteria of the user story met.
 - [ ] AI usage traced (commit footers, `AI_USAGE.md` when significant).
