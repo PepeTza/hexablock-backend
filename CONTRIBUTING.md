@@ -78,7 +78,7 @@ fix(hexa-merge): correct slide direction on north-west axis
 The axis vector for NW was inverted, so tiles slid south-east.
 
 Refs: #57
-AI-Assisted: Claude (claude-opus-5-5)
+AI-Assisted: Claude Code (claude-opus-5-5)
 ```
 
 ### Types
@@ -170,25 +170,12 @@ A `pre-commit` hook also runs lint and formatting on staged files
   20 minutes.
 - Title follows the commit format: `feat(hexa-lines): clear completed lines`.
 - Link the issue in the description (`Closes #42`).
-- Fill in the PR template (`.github/pull_request_template.md`):
-
-  ```markdown
-  ## What
-  <!-- What does this PR change? -->
-
-  ## Why
-  <!-- Link the issue / user story (HUxx) / use case (CU-xx) -->
-  Closes #
-
-  ## How to test
-  <!-- Steps or test names -->
-
-  ## Checklist
-  - [ ] Definition of Done met (CONTRIBUTING.md §6)
-  - [ ] AI-assisted commits carry the `AI-Assisted` footer
-  - [ ] AI_USAGE.md updated if AI output was significant or modified
-  - [ ] Docs / diagrams updated if the design changed
-  ```
+- Fill in every section of the PR template
+  ([`.github/pull_request_template.md`](./.github/pull_request_template.md)):
+  **What**, **Why** (issue, HUxx, CU-xx, RN-xx), **How it works** (5–10
+  plain-language lines, so any teammate can explain it), **How to test** and
+  the **Checklist**. The template is the source of truth; this guide does not
+  repeat it.
 
 - Open it as **Draft** while work is in progress; mark it ready when the DoD is
   met.
@@ -319,3 +306,27 @@ A task is done when **all** of these are true:
   for it: they must review, understand and be able to explain every line.
 - Agent rules (what it may decide alone, what it must ask, what it must never
   touch) live in [`AGENTS.md`](./AGENTS.md).
+- Every commit is authored by the team member, never by the tool: set
+  `git config user.name` and `user.email` in each session (including cloud
+  sessions) before committing, and reset the author of any commit that came
+  out as `Claude` before the PR is marked ready.
+
+---
+
+## 10. Files shared between the repositories
+
+These files are kept **identical** in both repositories by hand. Whoever
+changes one opens the twin PR in the other repository the same day and links
+it from the PR description:
+
+- `CONTRIBUTING.md` (this file)
+- `harness/README.md`, `harness/checklists.md`, `harness/task-template.md`
+- `.github/pull_request_template.md`
+- `.editorconfig`
+- `.claude/skills/harness-task`, `aaa-test` and `log-ai-usage`
+
+Quick check before opening the PR, from the client repository:
+
+```bash
+for f in CONTRIBUTING.md harness/README.md harness/checklists.md harness/task-template.md .github/pull_request_template.md .editorconfig; do diff -q "$f" "../hexablock-backend/$f"; done
+```
