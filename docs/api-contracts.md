@@ -22,7 +22,7 @@ backend must not change it without updating this file first.
 | Item | Convention |
 |---|---|
 | Base path | `/api/v1` (all routes below are relative to it) |
-| Admin panel | Served by the backend at `/admin` (not part of this API contract) |
+| Admin panel | A web app in the client repo (`admin/`) that uses this API with an admin token; the API allows its origin through CORS |
 | Format | JSON, UTF-8. Field names in `camelCase` |
 | Dates | ISO 8601 in UTC, e.g. `2026-11-10T22:05:00Z` |
 | Durations | Milliseconds (`durationMs`) |
@@ -373,9 +373,10 @@ Request:
 
 - `seedConfig`: required for `hexa-sort`, not allowed for `hexa-fit`. Same
   shape as in section 7.
-- The server validates again with the same domain code as the game (D-16).
-  For Fit: the area matches and the level has a solution (RN-13). For Sort:
-  it has free cells, at least one color and at least one goal.
+- The server checks the **format** of the level: required fields, types and
+  a known `schemaVersion`. Whether the level can be played (area, solution,
+  goals, RN-13) is validated by the admin panel with the game's own code, and
+  the game validates every level again when it downloads it (D-16, CU-15 A2).
 - The server assigns `id`, `order` (last + 1) and `publishedAt`.
 
 Response `201`: the created `LevelDefinition`.
@@ -384,8 +385,7 @@ Errors:
 
 - `400` malformed body.
 - `403` not an admin.
-- `422` the level fails validation; `message` says why (e.g. "area does not
-  match", "no solution").
+- `422` the level does not match the schema; `message` says which field.
 
 There is no update or delete endpoint, by design.
 
@@ -473,4 +473,3 @@ Response `503` with `"database": "down"` if the database does not respond.
 | Plausibility thresholds per variant for `POST /scores` | Scoring spec (RN-10, D-08) |
 | Final rate-limit values | Team decision |
 | Username and password rules | Team decision |
-| Optional replay validation (seed + move list) | Only if time allows (RN-39) |
