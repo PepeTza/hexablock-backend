@@ -9,7 +9,7 @@
 
 ## Description
 
-REST API and admin web panel for
+REST API for
 [HexaBlock Suite](https://github.com/PepeTza/hexablock-client), a mobile app
 with four hex-board puzzle games on one generic engine. Built with
 **NestJS + TypeScript** and **PostgreSQL** (Supabase).
@@ -21,7 +21,8 @@ Responsibilities:
 - Leaderboards per `gameId` and, for level-based games, per level.
 - Level definitions for Hexa Fit and Hexa Sort, added without updating the app.
 - Seed configuration for the games that use randomness.
-- Admin panel to publish levels and configure seeds.
+- Endpoints used by the admin panel (in the client repo) to publish levels
+  and configure seeds.
 
 ## Architecture
 
@@ -30,10 +31,10 @@ embedded here, sources in [`docs/`](./docs).
 
 ## Generic Engine
 
-The game engine lives in the
+The game engine lives only in the
 [client repository](https://github.com/PepeTza/hexablock-client#generic-engine).
-_Coming soon:_ how the backend reuses the shared domain package to validate
-levels.
+The backend does not run game rules: it stores levels, progress and scores,
+and checks their format and plausibility.
 
 ## Design Patterns
 
