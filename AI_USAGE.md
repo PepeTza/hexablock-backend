@@ -57,6 +57,19 @@ One entry per significant use. Copy the template.
   than needed; the team keeps only what it can justify. Diagram import into
   Lucidchart lost generic type parameters and had to be fixed manually.
 
+### 2026-11-11 — Shared agent skills
+
+- **Tool / model:** Claude Code, Claude Opus 5.5.
+- **Issue / PR:** #7.
+- **Prompt (paraphrase):** write the agent skills listed in §6 of the
+  client's `docs/implementation-plan.md` and link them from `AGENTS.md`.
+- **Result:** `api-endpoint` (backend only) plus `harness-task`, `aaa-test`
+  and `log-ai-usage`, copied unchanged from the client
+  (PepeTza/hexablock-client#12), and §7 of `AGENTS.md`.
+- **Team modifications:** none yet; to be reviewed in the pull request.
+- **Lessons / limitations:** shared skills live in both repositories and must
+  be kept identical by hand.
+
 ## 3. Critical evaluation
 
 To be completed at the end of the project.
