@@ -2,8 +2,8 @@
 
 This guide applies to both repositories:
 
-- **Client** — React Native + TypeScript mobile app (game engine, four variants, UI).
-- **Backend** — NestJS + PostgreSQL (Supabase) API and admin panel.
+- **Client** — React Native + TypeScript mobile app (game engine, four variants, UI) and the admin web panel (`admin/`).
+- **Backend** — NestJS + PostgreSQL (Supabase) API.
 
 Read it before opening your first branch. If something here conflicts with a
 document in `/docs`, open an issue instead of guessing.
@@ -110,7 +110,7 @@ Breaking changes: add `!` after the scope (`feat(engine)!: ...`) and a
 | `usecases`   | Application layer (use cases, aspects)         | both    |
 | `ui`         | Screens, components, rendering                 | client  |
 | `api`        | REST endpoints, DTOs, HTTP client              | both    |
-| `panel`      | Admin web panel                                | backend |
+| `panel`      | Admin web panel                                | client  |
 | `db`         | Schema, migrations, repositories               | backend |
 | `docs`       | Documentation, diagrams                        | both    |
 | `ci`         | Workflows, hooks                               | both    |
@@ -275,11 +275,17 @@ A task is done when **all** of these are true:
 
 - One issue per user story (HUxx) or technical task. Reference the related
   use case (CU-xx) and business rules (RN-xx) in the description.
+- A user story with work in both repositories is `HUxx` in the client and
+  `HUxx-be` in the backend; each issue names its twin.
 - Labels:
   - **Variant:** `hexa-lines`, `hexa-fit`, `hexa-sort`, `hexa-merge`, `engine`
   - **Layer:** `domain`, `application`, `adapters`, `frameworks`
   - **Type:** `feature`, `bug`, `docs`, `test`, `chore`
-- One milestone per iteration of the project plan.
+  - **Area:** `panel` (admin web panel, client repo)
+- The person responsible for an issue is set with **Assignees**, not a label.
+- No milestones: issues are created at the start of each iteration of
+  [`docs/implementation-plan.md`](https://github.com/PepeTza/hexablock-client/blob/main/docs/implementation-plan.md),
+  and each one states its iteration and dates.
 
 ---
 
