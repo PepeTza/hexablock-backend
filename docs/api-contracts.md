@@ -184,7 +184,8 @@ A player has **one progress entry per `gameId`** (RN-33).
 - Endless games (`hexa-lines`, `hexa-merge`): `bestScore` is used and `levels`
   is always `[]`.
 - Level games (`hexa-fit`, `hexa-sort`): `bestScore` is `0`. A level appears in
-  `levels` only once it has been completed. `stars` is 1–3.
+  `levels` only once it has been completed. `stars` is 1–3 in `hexa-fit` and
+  `null` in `hexa-sort`, which has no stars (RN-25).
 - `updatedAt` is set by the server.
 
 ### `GET /progress` — player (CU-11, CU-12)
@@ -205,7 +206,7 @@ Sends the device's progress for one game. The server **merges** it with what it
 has, keeping the best of both (RN-36):
 
 - `bestScore` = max of both.
-- For each level: max `bestScore` and max `stars`.
+- For each level: max `bestScore` and, in `hexa-fit`, max `stars`.
 - `levels` = union of the levels completed on either side.
 
 Request: a `PlayerProgress` without `updatedAt`. The `gameId` in the body must
@@ -218,7 +219,8 @@ are safe.
 
 Errors:
 
-- `400` invalid body, unknown `levelId` or `gameId` mismatch.
+- `400` invalid body, unknown `levelId`, `gameId` mismatch, or `stars` sent
+  for a `hexa-sort` level.
 - `401` invalid or expired token.
 
 ---
