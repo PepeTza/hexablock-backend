@@ -6,4 +6,5 @@ details live in the PR.
 | Date | Task | Issue / PR | Owner | Tests (passed / total) | Notes |
 |---|---|---|---|---|---|
 | 2026-11-10 | Repository skeleton (docs, harness, templates) | — | PepeTza | — | No code yet |
+| 2026-11-11 | Shared agent skills | #7 | PepeTza | — | Docs only; api-endpoint + 3 skills shared with the client (#12) |
 | 2026-11-11 | Align CONTRIBUTING with the admin panel in the client | #8 | PepeTza | — | Docs only; same file as the client (PepeTza/hexablock-client#4) |
