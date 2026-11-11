@@ -264,7 +264,8 @@ These are integrity constraints (no duplicated rows), not business rules.
   applied in deployment with `prisma migrate deploy`. Never edit an applied
   migration; add a new one.
 - **Seed data:** the initial Fit and Sort levels and default seed configs are
-  loaded by a seed script, through the same domain validation as the panel.
+  loaded by a seed script from the level files of the client repo, which are
+  validated there by the game's tests.
 
 ## 8. Changing the database
 
