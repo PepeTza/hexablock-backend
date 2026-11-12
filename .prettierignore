@@ -1,0 +1,8 @@
+# Dependencies and generated output
+node_modules/
+dist/
+coverage/
+package-lock.json
+
+# Markdown is written by hand (tables, wrapped prose); not reformatted.
+*.md
