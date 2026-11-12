@@ -16,7 +16,8 @@
     "test:coverage": "jest --coverage",
     "lint": "eslint . --max-warnings 0",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "prepare": "husky"
   },
   "dependencies": {
     "@nestjs/common": "^11.2.9",
@@ -26,6 +27,8 @@
     "rxjs": "^7.8.2"
   },
   "devDependencies": {
+    "@commitlint/cli": "^21.2.4",
+    "@commitlint/config-conventional": "^21.2.4",
     "@nestjs/cli": "^11.0.24",
     "@nestjs/testing": "^11.2.9",
     "@types/express": "^5.0.6",
@@ -33,7 +36,9 @@
     "@types/node": "^22.20.5",
     "eslint": "^10.14.0",
     "eslint-config-prettier": "^10.1.8",
+    "husky": "^9.1.7",
     "jest": "~30.5.2",
+    "lint-staged": "^17.6.0",
     "prettier": "^3.10.0",
     "ts-jest": "^29.4.15",
     "typescript": "~6.0.3",
