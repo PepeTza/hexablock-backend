@@ -1,0 +1,23 @@
+# Disposable PostgreSQL for local development and tests (data-model §7).
+# Same major version as CI. Never used in production.
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: hexablock
+      POSTGRES_PASSWORD: hexablock
+      POSTGRES_DB: hexablock
+    ports:
+      # Host port 5433, so it does not clash with a PostgreSQL already
+      # installed on the machine (which uses 5432).
+      - '5433:5432'
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U hexablock -d hexablock']
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    volumes:
+      - db-data:/var/lib/postgresql/data
+
+volumes:
+  db-data:
