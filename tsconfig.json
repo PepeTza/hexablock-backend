@@ -3,6 +3,7 @@
     "module": "nodenext",
     "moduleResolution": "nodenext",
     "target": "ES2023",
+    "rootDir": ".",
     "outDir": "./dist",
     "strict": true,
     "noUncheckedIndexedAccess": true,
