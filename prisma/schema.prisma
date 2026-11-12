@@ -1,0 +1,11 @@
+// Database schema of HexaBlock Suite (docs/data-model.md).
+// The tables arrive with the initial migration (T16); for now Prisma only
+// needs to know which database it talks to.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
