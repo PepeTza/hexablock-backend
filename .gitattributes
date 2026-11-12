@@ -1,0 +1,3 @@
+# Store and check out text files with LF on every platform, so Windows
+# checkouts do not show whole files as modified (see .editorconfig).
+* text=auto eol=lf
