@@ -3,9 +3,9 @@
 <!-- Badges: added when CI is set up (build status, tests, coverage). -->
 ![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)
 
-> **Status:** pre-implementation. The repository currently holds the API
-> contract, contribution rules and agent harness. Code starts in the next
-> iteration.
+> **Status:** foundations. The NestJS project, the database connection and
+> `GET /api/v1/health` are in place; the endpoints of the contract arrive in
+> the next iterations.
 
 ## Description
 
@@ -57,12 +57,43 @@ Once implemented, interactive documentation (Swagger / OpenAPI) is available at
 
 ## Getting Started
 
-_Coming soon:_ prerequisites, environment variables, database setup and how to
-run the API locally.
+### Prerequisites
+
+- Node.js 22.13 or newer and npm.
+- Docker Desktop, for the local PostgreSQL.
+
+### Run the API locally
+
+```bash
+npm install
+cp .env.example .env
+npm run db:up
+npm run start:dev
+```
+
+- Health check: http://localhost:3000/api/v1/health returns
+  `{ "status": "ok", "database": "ok" }`.
+- Swagger UI: http://localhost:3000/api/docs.
+- `npm run db:down` stops the database; its data is kept in a Docker volume.
+
+### Environment variables
+
+| Variable | Required | Description |
+|---|---|---|
+| `DATABASE_URL` | Yes | PostgreSQL connection string. Locally, the Docker database on port 5433; in production, Supabase. Never committed. |
+| `PORT` | No | Port the API listens on. Defaults to `3000`. |
+
+The API refuses to start if a variable is missing or malformed.
 
 ## Running Tests
 
-_Coming soon._
+```bash
+npm test               # unit tests
+npm run test:coverage  # unit tests with the 80 % coverage check
+npm run test:e2e       # end-to-end tests; needs `npm run db:up`
+```
+
+End-to-end tests always use the disposable database, never the one in `.env`.
 
 ## AI Usage Documentation
 

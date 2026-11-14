@@ -30,8 +30,23 @@ explainability over cleverness.
 - Published levels are immutable: never write code or migrations that update
   or delete them.
 - Passwords are always hashed; secrets come only from environment variables.
-- Commands (lint, type-check, test, run, migrate) will be listed here once the
-  project is initialised.
+- Commands (run from the repository root, Node 22.13 or newer, Docker for the
+  local database):
+  - `npm install`: installs dependencies, generates the Prisma client and
+    activates the git hooks.
+  - `npm run db:up` / `npm run db:down`: start or stop the disposable
+    PostgreSQL 16 of `docker-compose.yml` (host port 5433).
+  - `npm run start:dev`: run the API with reload; needs a `.env` copied from
+    `.env.example`.
+  - `npm run lint`: ESLint, no warnings allowed.
+  - `npm run format:check` / `npm run format`: check or apply Prettier.
+  - `npm run typecheck`: TypeScript in strict mode, no emit.
+  - `npm test` / `npm run test:coverage`: unit tests (`*.spec.ts`); coverage
+    must stay at 80 % or more in `src/domain` and `src/application` once
+    those folders exist.
+  - `npm run test:e2e`: end-to-end tests (`test/*.e2e-spec.ts`) against the
+    database of `npm run db:up`, or `TEST_DATABASE_URL` in CI.
+  - `npx prisma migrate dev`: create and apply a migration (from T16).
 
 ## 2. Workflow: the harness
 

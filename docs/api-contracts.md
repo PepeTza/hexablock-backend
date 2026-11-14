@@ -462,7 +462,11 @@ Response `200`:
 { "status": "ok", "database": "ok" }
 ```
 
-Response `503` with `"database": "down"` if the database does not respond.
+Response `503` if the database does not respond:
+
+```json
+{ "status": "error", "database": "down" }
+```
 
 ---
 
