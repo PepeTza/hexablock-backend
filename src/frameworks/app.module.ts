@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 
 import { validateEnvironment } from './config/environment';
+import { HealthModule } from './health/health.module';
 import { PrismaModule } from './prisma/prisma.module';
 
 /** Root module: every feature module of the API is imported here. */
@@ -11,6 +12,7 @@ import { PrismaModule } from './prisma/prisma.module';
     // if `validateEnvironment` rejects them.
     ConfigModule.forRoot({ isGlobal: true, validate: validateEnvironment }),
     PrismaModule,
+    HealthModule,
   ],
 })
 export class AppModule {}
