@@ -89,6 +89,37 @@ One entry per significant use. Copy the template.
   same date; the findings are in the client's
   `docs/plan-review-2026-11-11.md`.
 
+### 2026-11-12 to 2026-11-14 — NestJS setup
+
+- **Tool / model:** Claude Code; claude-fable-5-2 for commits 1–5,
+  claude-opus-5-5 for commits 6–8 (the session model changed midway).
+- **Issue / PR:** #4.
+- **Prompt (paraphrase):** implement issue #4 through the harness and explain
+  every step in plain language, so the owner can defend it.
+- **Result:** NestJS project with strict TypeScript, ESLint, Prettier, husky
+  and commitlint; environment validation; Prisma connected to a Docker
+  PostgreSQL; `GET /api/v1/health` through the four layers (port, use case,
+  Prisma adapter, controller); Swagger at `/api/docs`; unit and e2e tests.
+- **Team modifications:**
+  - The owner kept NestJS 11 and Jest, the team's choice, after the AI found
+    that NestJS 12 is ESM-only and its official setup uses Vitest.
+  - The team approved `@prisma/adapter-pg`, missing from the plan's list:
+    Prisma 7 refuses to connect without a driver adapter (checked by running it).
+  - Manual testing by the owner found a bug the AI missed: incremental
+    compilation plus `deleteOutDir` left `dist/` empty on the second build,
+    so `npm run start:dev` crashed. `incremental` was removed.
+  - Host port 5433 for the Docker database, because the owner's machine
+    already runs PostgreSQL on 5432.
+- **Lessons / limitations:**
+  - The AI first claimed from memory that Prisma 7 needs the adapter; it was
+    confirmed only after running it. Version facts must be checked.
+  - Prisma's engine download from `binaries.prisma.sh` ran at about 48 KB/s
+    with no progress shown, so the install looked frozen.
+  - `lint-staged` 17 asks for Node 22.22.1 or newer while both repositories
+    declare 22.13: a warning today, to be aligned by the team.
+  - New port `IDatabaseProbe` must be added to the ports table of the client's
+    `architecture.md` (outside this repository).
+
 ## 3. Critical evaluation
 
 To be completed at the end of the project.
