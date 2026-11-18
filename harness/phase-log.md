@@ -11,3 +11,4 @@ details live in the PR.
 | 2026-11-11 | Relax the PR review rule | — | PepeTza | — | Docs only; no approval required on `main`; the author merges on green CI; review requested and allowed after the merge; twin PR in the client |
 | 2026-11-11 | Align CONTRIBUTING with the admin panel in the client | #8 | PepeTza | — | Docs only; same file as the client (PepeTza/hexablock-client#4) |
 | 2026-11-14 | NestJS setup with strict TypeScript, Prisma, health and Swagger | #4 | KeneFu | 11/11 unit, 4/4 e2e | NestJS 11 (12 is ESM-only and needs Vitest); Prisma 7 + `@prisma/adapter-pg` approved by the team; local PostgreSQL on host port 5433 |
+| 2026-11-17 | Layer boundaries with ESLint rules and Jest fixture | #6 | PepeTza | 20 / 20 unit | `no-restricted-imports` per layer (`domain`, `application`, `adapters`); `eslint-boundaries.spec.ts` |

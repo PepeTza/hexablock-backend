@@ -17,5 +17,5 @@
     "removeComments": true,
     "types": ["node", "jest"]
   },
-  "include": ["src", "test", "prisma.config.ts"]
+  "include": ["src", "test", "prisma.config.ts", "eslint-boundaries.spec.ts"]
 }

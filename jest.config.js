@@ -16,8 +16,11 @@ const coverageThreshold = Object.fromEntries(
 /** @type {import('jest').Config} */
 module.exports = {
   testEnvironment: 'node',
-  roots: ['<rootDir>/src'],
-  testRegex: '\.spec\.ts$',
+  roots: ['<rootDir>'],
+  testMatch: [
+    '<rootDir>/src/**/*.spec.ts',
+    '<rootDir>/eslint-boundaries.spec.ts',
+  ],
   transform: { '^.+\.ts$': 'ts-jest' },
   collectCoverageFrom: ['src/**/*.ts', '!src/**/*.spec.ts', '!src/main.ts'],
   coverageThreshold,
