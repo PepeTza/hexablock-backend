@@ -1,6 +1,12 @@
 // Database schema of HexaBlock Suite (docs/data-model.md).
-// The tables arrive with the initial migration (T16); for now Prisma only
-// needs to know which database it talks to.
+//
+// The database stores data and enforces integrity (keys, required columns,
+// uniqueness); business rules live in the domain (data-model §1). Prisma is
+// the outermost layer: only the repository adapters use this client.
+//
+// Names are camelCase in TypeScript and snake_case in PostgreSQL (`@map`).
+// The partial unique indexes of data-model §5 cannot be written here; they
+// are added by hand at the end of the initial migration.
 
 generator client {
   provider = "prisma-client-js"
@@ -8,4 +14,163 @@ generator client {
 
 datasource db {
   provider = "postgresql"
+}
+
+// Prisma enum values cannot contain hyphens; the stored and API value keeps
+// them through `@map` (data-model §3).
+enum GameId {
+  hexa_lines @map("hexa-lines")
+  hexa_fit   @map("hexa-fit")
+  hexa_sort  @map("hexa-sort")
+  hexa_merge @map("hexa-merge")
+
+  @@map("game_id")
+}
+
+enum Role {
+  player
+  admin
+
+  @@map("role")
+}
+
+enum SeedMode {
+  fixed
+  random
+
+  @@map("seed_mode")
+}
+
+enum SubmissionStatus {
+  accepted
+  rejected
+
+  @@map("submission_status")
+}
+
+/// Aggregate `User`. `username` arrives already lower-cased by the
+/// `Username` value object, so uniqueness is case-insensitive.
+model User {
+  id           String   @id @default(uuid()) @db.Uuid
+  username     String   @unique
+  passwordHash String   @map("password_hash")
+  role         Role     @default(player)
+  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamptz
+
+  playerProgress     PlayerProgress[]
+  levelProgress      LevelProgress[]
+  scoreSubmissions   ScoreSubmission[]
+  leaderboardEntries LeaderboardEntry[]
+  publishedLevels    Level[]
+  seedConfigUpdates  SeedConfig[]
+
+  @@map("users")
+}
+
+/// Aggregate `PlayerProgress`: one row per user and variant (RN-33).
+model PlayerProgress {
+  userId    String   @map("user_id") @db.Uuid
+  gameId    GameId   @map("game_id")
+  bestScore Int      @map("best_score")
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@id([userId, gameId])
+  @@map("player_progress")
+}
+
+/// Aggregate `PlayerProgress`: one row per completed level.
+model LevelProgress {
+  userId    String   @map("user_id") @db.Uuid
+  levelId   String   @map("level_id") @db.Uuid
+  bestScore Int      @map("best_score")
+  stars     Int?     @db.SmallInt
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz
+
+  user  User  @relation(fields: [userId], references: [id])
+  level Level @relation(fields: [levelId], references: [id])
+
+  @@id([userId, levelId])
+  @@map("level_progress")
+}
+
+/// Aggregate `LevelDefinition`. Published levels are never updated or
+/// deleted (RN-37): the repository offers no such operation.
+model Level {
+  id            String   @id @default(uuid()) @db.Uuid
+  gameId        GameId   @map("game_id")
+  order         Int
+  schemaVersion Int      @map("schema_version")
+  spec          Json     @db.JsonB
+  publishedAt   DateTime @default(now()) @map("published_at") @db.Timestamptz
+  publishedBy   String   @map("published_by") @db.Uuid
+
+  publisher          User               @relation(fields: [publishedBy], references: [id])
+  levelProgress      LevelProgress[]
+  scoreSubmissions   ScoreSubmission[]
+  leaderboardEntries LeaderboardEntry[]
+  // At most one per level: enforced by a partial unique index (data-model §5).
+  seedConfigs        SeedConfig[]
+
+  // Also serves "new levels after an order" (data-model §6).
+  @@unique([gameId, order])
+  @@map("levels")
+}
+
+/// Aggregate `SeedConfig`: one row per endless game, or per Hexa Sort level.
+model SeedConfig {
+  id        String   @id @default(uuid()) @db.Uuid
+  gameId    GameId   @map("game_id")
+  levelId   String?  @map("level_id") @db.Uuid
+  mode      SeedMode
+  value     BigInt?
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz
+  updatedBy String   @map("updated_by") @db.Uuid
+
+  level   Level? @relation(fields: [levelId], references: [id], onDelete: Restrict)
+  updater User   @relation(fields: [updatedBy], references: [id])
+
+  @@map("seed_configs")
+}
+
+/// Log of every `POST /scores`, accepted or rejected (RN-43).
+model ScoreSubmission {
+  sessionId    String           @id @map("session_id") @db.Uuid
+  userId       String           @map("user_id") @db.Uuid
+  gameId       GameId           @map("game_id")
+  levelId      String?          @map("level_id") @db.Uuid
+  score        Int
+  seed         BigInt?
+  moveCount    Int              @map("move_count")
+  durationMs   Int              @map("duration_ms")
+  finishedAt   DateTime         @map("finished_at") @db.Timestamptz
+  receivedAt   DateTime         @default(now()) @map("received_at") @db.Timestamptz
+  status       SubmissionStatus
+  rejectReason String?          @map("reject_reason")
+
+  user  User   @relation(fields: [userId], references: [id])
+  level Level? @relation(fields: [levelId], references: [id], onDelete: Restrict)
+
+  // Rate limit per user (data-model §6).
+  @@index([userId, receivedAt])
+  @@map("score_submissions")
+}
+
+/// Aggregate `LeaderboardEntry`: one row per player and table, per variant
+/// in Lines and Merge, per level in Fit and Sort (RN-43).
+model LeaderboardEntry {
+  id         String   @id @default(uuid()) @db.Uuid
+  userId     String   @map("user_id") @db.Uuid
+  gameId     GameId   @map("game_id")
+  levelId    String?  @map("level_id") @db.Uuid
+  bestScore  Int      @map("best_score")
+  achievedAt DateTime @map("achieved_at") @db.Timestamptz
+
+  user  User   @relation(fields: [userId], references: [id])
+  level Level? @relation(fields: [levelId], references: [id], onDelete: Restrict)
+
+  // Leaderboard top 50 (data-model §6).
+  @@index([gameId, levelId, bestScore(sort: Desc), achievedAt(sort: Asc)])
+  @@map("leaderboard_entries")
 }
