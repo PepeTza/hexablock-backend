@@ -94,6 +94,20 @@ npm run test:e2e       # end-to-end tests; needs `npm run db:up`
 ```
 
 End-to-end tests always use the disposable database, never the one in `.env`.
+They apply the pending migrations first, and the schema tests run inside
+transactions that are rolled back, so they leave no rows behind.
+
+### Database migrations
+
+The schema is [`prisma/schema.prisma`](./prisma/schema.prisma), described in
+[`docs/data-model.md`](./docs/data-model.md). Migrations are committed in
+`prisma/migrations/` and never edited once applied.
+
+```bash
+npx prisma migrate status              # what is applied
+npx prisma migrate dev --name <change> # create and apply a new migration
+npx prisma migrate deploy              # apply committed migrations (CI, deploy)
+```
 
 ### Continuous integration
 

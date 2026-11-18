@@ -138,6 +138,26 @@ One entry per significant use. Copy the template.
   - The workflow file itself only runs on GitHub, so it is verified with the
     PR's first run, not locally.
 
+### 2026-11-18 — Prisma schema and initial migration
+
+- **Tool / model:** Claude Code, claude-opus-5-5.
+- **Issue / PR:** #17.
+- **Prompt (paraphrase):** implement issue #17 through the harness, following
+  `docs/data-model.md`, Clean Architecture and SOLID, and explain every step.
+- **Result:** `prisma/schema.prisma` with seven tables and four enums, the
+  initial migration with the four partial unique indexes added by hand, six
+  e2e schema tests and a Jest global setup that applies migrations.
+- **Team modifications:** the owner approved the plan, including restricting
+  deletes on every foreign key, which `data-model.md` did not define.
+- **Lessons / limitations:**
+  - Before planning, a scratch database confirmed that Prisma does not drop
+    hand-written partial indexes in later migrations.
+  - Reviewing the generated SQL caught two problems the schema hid: optional
+    relations defaulted to `ON DELETE SET NULL` (deleting a level would have
+    turned Fit rows into rows without a level), and Prisma's required
+    `@unique` for a one-to-one relation duplicated a partial index. Both were
+    fixed before committing.
+
 ## 3. Critical evaluation
 
 To be completed at the end of the project.
