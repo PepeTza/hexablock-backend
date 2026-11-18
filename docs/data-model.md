@@ -14,15 +14,16 @@ PostgreSQL schema of the HexaBlock Suite backend (hosted on Supabase).
 
 - **The database stores data; it does not hold business rules.** Rules such as
   "a fixed seed must have a value", "stars are 1 to 3" or "published levels
-  are immutable" live in the domain (aggregates and use cases), not in
+  are immutable" live in the domain (domain entities and use cases), not in
   triggers or check constraints. The database only enforces **integrity**:
   primary keys, foreign keys, required columns and uniqueness.
 - **Progress and leaderboard are separate.** Progress is reported by the
   device and only merged (RN-36). The leaderboard only contains scores the
   server has **validated** (RN-39). Keeping them apart means inflated progress
   can never reach the leaderboard.
-- **One repository per aggregate.** Each table group below belongs to one
-  aggregate of the domain model; repositories load and save whole aggregates.
+- **One repository port per domain entity.** Each table group below maps to a
+  Layer 1 entity; repositories load and save domain entities behind Layer 2
+  ports.
 - **ORM: Prisma.** The schema is described in `prisma/schema.prisma` and
   changed only through migrations. Prisma lives in the outermost layer, behind
   the repository ports (`IUserRepository`, `IProgressRepository`, ...); the
@@ -120,7 +121,7 @@ schema with `@map("hexa-lines")`, so the stored and API value stays
 
 ## 4. Tables
 
-### `users` — aggregate `User`
+### `users` — entity `User`
 
 | Column | Type | Notes |
 |---|---|---|
@@ -130,7 +131,7 @@ schema with `@map("hexa-lines")`, so the stored and API value stays
 | `role` | `role` | `player` by default |
 | `created_at` | `timestamptz` | |
 
-### `player_progress` and `level_progress` — aggregate `PlayerProgress`
+### `player_progress` and `level_progress` — entity `PlayerProgress`
 
 One `player_progress` row per user and variant (RN-33). For level-based
 variants, one `level_progress` row per completed level.
@@ -155,9 +156,9 @@ variants, one `level_progress` row per completed level.
 | `updated_at` | `timestamptz` | |
 
 The merge rule (best score, max stars, union of levels) is applied by the
-`PlayerProgress` aggregate before saving, not by SQL.
+`PlayerProgress` entity before saving, not by SQL.
 
-### `levels` — aggregate `LevelDefinition`
+### `levels` — entity `LevelDefinition`
 
 | Column | Type | Notes |
 |---|---|---|
@@ -172,7 +173,7 @@ The merge rule (best score, max stars, union of levels) is applied by the
 Published levels are never updated or deleted (RN-37). This is enforced by the
 repository, which exposes no update or delete operation, and by the use case.
 
-### `seed_configs` — aggregate `SeedConfig`
+### `seed_configs` — entity `SeedConfig`
 
 | Column | Type | Notes |
 |---|---|---|
@@ -206,7 +207,7 @@ on the server (RN-43) and duplicates are detected.
 | `status` | `submission_status` | |
 | `reject_reason` | `text`, nullable | Why the plausibility check failed |
 
-### `leaderboard_entries` — aggregate `LeaderboardEntry`
+### `leaderboard_entries` — entity `LeaderboardEntry`
 
 One row per player and table: per variant in Lines and Merge, per level in
 Fit and Sort (RN-43). Only updated when an accepted submission beats the

@@ -23,7 +23,7 @@ contract, never the other way round.
 
 | Step | Layer | Folder | What |
 |---|---|---|---|
-| 1 | Domain | `src/domain/<context>/` | Aggregate or value object changes, with the business rule (RN-xx) inside the domain, never in the controller |
+| 1 | Domain | `src/domain/` | Entity or value object changes, with the business rule (RN-xx) inside the domain, never in the controller |
 | 2 | Application | `src/application/ports/` | The repository or service port the use case needs (`IUserRepository`, `ITokenService`, ...) |
 | 3 | Application | `src/application/use-cases/` | The use case as a plain class with no Nest decorators |
 | 4 | Adapters | `src/adapters/persistence/` | The `Prisma...Repository` implementing the port |

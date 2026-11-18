@@ -221,7 +221,7 @@ belong to. Do not squash other people's commits.
 - **ESLint + Prettier** are the source of truth for formatting. Do not argue
   style in reviews; fix the config instead.
 - All code, identifiers, comments and docs are **in English**. Use the terms of
-  the [glossary](https://github.com/PepeTza/hexablock-client/blob/main/docs/glossary.md) (ubiquitous language).
+  the [glossary](https://github.com/PepeTza/hexablock-client/blob/main/docs/glossary.md).
 
 | Element                    | Convention            | Example                     |
 |----------------------------|-----------------------|-----------------------------|
