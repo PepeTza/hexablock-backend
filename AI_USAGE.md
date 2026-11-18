@@ -120,6 +120,24 @@ One entry per significant use. Copy the template.
   - New port `IDatabaseProbe` must be added to the ports table of the client's
     `architecture.md` (outside this repository).
 
+### 2026-11-17 — Backend CI
+
+- **Tool / model:** Claude Code, claude-opus-5-5.
+- **Issue / PR:** #5.
+- **Prompt (paraphrase):** implement issue #5 through the harness and explain
+  what a CI is and every step of the workflow.
+- **Result:** `.github/workflows/ci.yml` with one job and a `postgres:16`
+  service, the CI badge and a CI section in the README.
+- **Team modifications:** the owner ran every step of the workflow locally
+  before approving the commit.
+- **Lessons / limitations:**
+  - `npm audit` reports 55 vulnerabilities, all in development tools (Jest,
+    ts-jest, the Nest CLI, ESLint, lint-staged); `npm audit --omit=dev` finds
+    none. `npm audit fix --force` was rejected: it downgrades Jest 30 to 26 and
+    upgrades the Nest CLI to 12. To be revisited by the team in its own PR.
+  - The workflow file itself only runs on GitHub, so it is verified with the
+    PR's first run, not locally.
+
 ## 3. Critical evaluation
 
 To be completed at the end of the project.
