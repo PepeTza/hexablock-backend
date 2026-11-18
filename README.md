@@ -1,6 +1,6 @@
 # HexaBlock Suite — Backend
 
-<!-- Badges: added when CI is set up (build status, tests, coverage). -->
+[![CI](https://github.com/PepeTza/hexablock-backend/actions/workflows/ci.yml/badge.svg)](https://github.com/PepeTza/hexablock-backend/actions/workflows/ci.yml)
 ![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)
 
 > **Status:** foundations. The NestJS project, the database connection and
@@ -94,6 +94,14 @@ npm run test:e2e       # end-to-end tests; needs `npm run db:up`
 ```
 
 End-to-end tests always use the disposable database, never the one in `.env`.
+
+### Continuous integration
+
+[`.github/workflows/ci.yml`](./.github/workflows/ci.yml) runs on every pull
+request and every push to `main`, against a disposable `postgres:16` service:
+commitlint on the PR's commits, format, lint, type-check,
+`prisma migrate deploy`, unit tests with the 80 % coverage threshold, e2e tests
+and build. A red check means the pull request must not be merged.
 
 ## AI Usage Documentation
 
