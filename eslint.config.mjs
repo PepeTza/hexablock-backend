@@ -1,7 +1,11 @@
-// ESLint flat config: the TypeScript baseline shared with the client. The
-// layer boundaries of Clean Architecture are added by issue #6.
+// ESLint flat config: the TypeScript baseline shared with the client plus
+// the Clean Architecture layer boundaries (eslint-boundaries.config.js, issue #6).
 import prettier from 'eslint-config-prettier';
 import tseslint from 'typescript-eslint';
+
+import boundaries from './eslint-boundaries.config.js';
+
+const { layerBoundaries } = boundaries;
 
 export default tseslint.config(
   {
@@ -27,6 +31,7 @@ export default tseslint.config(
       '@typescript-eslint/no-explicit-any': 'error',
     },
   },
+  ...layerBoundaries(),
   // Must stay last: turns off rules that conflict with Prettier.
   prettier,
 );
