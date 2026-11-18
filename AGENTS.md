@@ -45,8 +45,15 @@ explainability over cleverness.
     must stay at 80 % or more in `src/domain` and `src/application` once
     those folders exist.
   - `npm run test:e2e`: end-to-end tests (`test/*.e2e-spec.ts`) against the
-    database of `npm run db:up`, or `TEST_DATABASE_URL` in CI.
-  - `npx prisma migrate dev`: create and apply a migration (from T16).
+    database of `npm run db:up`, or `TEST_DATABASE_URL` in CI. A Jest global
+    setup applies the pending migrations first.
+  - `npx prisma migrate dev --name <change>`: create and apply a new
+    migration after changing `prisma/schema.prisma`. Never edit an applied
+    migration; add a new one (data-model §7).
+  - `npx prisma migrate deploy`: apply the committed migrations (CI and
+    deployment). `npx prisma migrate status`: check what is applied.
+  - Partial unique indexes (data-model §5) are written by hand at the end of
+    the migration that needs them; Prisma keeps them in later migrations.
 
 ## 2. Workflow: the harness
 
