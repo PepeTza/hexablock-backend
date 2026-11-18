@@ -14,3 +14,4 @@ details live in the PR.
 | 2026-11-17 | Layer boundaries with ESLint rules and Jest fixture | #6 | PepeTza | 20 / 20 unit | `no-restricted-imports` per layer (`domain`, `application`, `adapters`); `eslint-boundaries.spec.ts` |
 | 2026-11-17 | Backend CI with a PostgreSQL service | #5 | KeneFu | 20/20 unit, 4/4 e2e | One `ci` job on PRs and pushes to `main`; `postgres:16` service; the owner still has to mark the check as required on `main` |
 | 2026-11-18 | Prisma schema and initial migration | #17 | KeneFu | 20/20 unit, 10/10 e2e | 7 tables, 4 enums; 4 partial unique indexes by hand (Prisma keeps them); every FK restricts deletes; e2e migrate first and roll back their rows |
+| 2026-11-18 | Remove DDD references in favour of Clean Architecture | #24 | PepeTza | — | Docs only; aligned `data-model.md`, `AGENTS.md`, `CONTRIBUTING.md` and `api-endpoint`; twin client #43 |

@@ -14,7 +14,7 @@ with a NestJS backend and an admin web panel.
 - Backend repo: https://github.com/PepeTza/hexablock-backend
 
 What is evaluated is not only that the games work, but that the design applies
-generic programming, SOLID, Clean Architecture, DDD, GoF patterns and AOP, and
+generic programming, SOLID, Clean Architecture, GoF patterns and AOP, and
 that **the team can explain every line**. Optimise for clarity and
 explainability over cleverness.
 
