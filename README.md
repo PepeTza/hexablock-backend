@@ -122,6 +122,15 @@ and build. A red check means the pull request must not be merged.
 See [`AI_USAGE.md`](./AI_USAGE.md). AI agents follow [`AGENTS.md`](./AGENTS.md)
 and the [`harness/`](./harness/README.md).
 
+## References
+
+External sources of algorithms and ideas. We reimplement them; we do not copy
+their code. Each one is also cited in a comment in the file that uses it.
+None yet.
+
+| Source | What we took | Where |
+|---|---|---|
+
 ## Contributing
 
 See [`CONTRIBUTING.md`](./CONTRIBUTING.md): Conventional Commits, branch

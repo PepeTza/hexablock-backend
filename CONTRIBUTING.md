@@ -283,9 +283,11 @@ A task is done when **all** of these are true:
   - **Type:** `feature`, `bug`, `docs`, `test`, `chore`
   - **Area:** `panel` (admin web panel, client repo)
 - The person responsible for an issue is set with **Assignees**, not a label.
-- No milestones: issues are created at the start of each iteration of
-  [`docs/implementation-plan.md`](https://github.com/PepeTza/hexablock-client/blob/main/docs/implementation-plan.md),
-  and each one states its iteration and dates.
+- No milestones: the issues of every iteration of
+  [`docs/implementation-plan.md`](https://github.com/PepeTza/hexablock-client/blob/main/docs/implementation-plan.md)
+  are created ahead, and each one states its iteration and dates.
+- Each issue has a `Blocked by:` line listing the issues it needs (`—` when
+  none); work on it starts when all of them are closed.
 
 ---
 
