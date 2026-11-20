@@ -37,6 +37,8 @@
       business logic in UI or controllers.
 - [ ] Acceptance criteria of the user story met.
 - [ ] Docs and diagrams updated if the design changed.
+- [ ] Every external source (algorithm, idea, snippet, asset) cited in a
+      comment where it is used and listed in README → References.
 - [ ] Row added to `harness/phase-log.md`.
 - [ ] `AI_USAGE.md` entry added if significant.
 - [ ] "How it works" summary written for the PR description.

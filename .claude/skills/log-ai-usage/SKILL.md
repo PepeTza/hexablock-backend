@@ -6,7 +6,7 @@ description: Record how AI was used in a HexaBlock Suite task: commit footers, t
 # Log AI usage
 
 The statement asks for traceable AI use, and the commit history is reviewed
-per person. Do these three checks before opening the PR.
+per person. Do these checks before opening the PR.
 
 ## 1. Commit footers
 
@@ -39,7 +39,18 @@ and fill every field:
 - **Team modifications:** what was changed, rejected or corrected, and why.
 - **Lessons / limitations:** including any wrong fact the team had to catch.
 
-## 4. PR description
+## 4. External sources
+
+If the task used an algorithm, idea, snippet or asset from someone else (a
+website, a paper, a book, a library's docs), including one the AI suggested:
+
+- Cite it in a comment where it is used: author or site, title, link, and what
+  was taken.
+- Add a row to README → References (or its "Third-party assets" table).
+- If you cannot find the original source of something the AI produced, say so
+  in the PR and in the `AI_USAGE.md` entry instead of leaving it uncited.
+
+## 5. PR description
 
 Fill the PR template, including **How it works**: 5–10 plain-language lines
 so any teammate can explain the change.

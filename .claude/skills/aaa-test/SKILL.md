@@ -16,8 +16,8 @@ what it protects. The team approves the list before you write the tests.
 ## Where the test goes
 
 - Client: `*.test.ts` next to the file it tests
-  (`src/domain/engine/geometry/hex-geometry.ts` →
-  `src/domain/engine/geometry/hex-geometry.test.ts`).
+  (`src/domain/engine/hex/hex-geometry.ts` →
+  `src/domain/engine/hex/hex-geometry.test.ts`).
 - Backend: `*.spec.ts` next to the file it tests.
 
 ## Shape of a test
