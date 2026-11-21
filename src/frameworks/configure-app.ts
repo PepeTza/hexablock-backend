@@ -1,6 +1,8 @@
+import { ValidationPipe } from '@nestjs/common';
 import type { NestExpressApplication } from '@nestjs/platform-express';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
+import { toValidationException } from '../adapters/http/validation/validation-exception';
 import { AllExceptionsFilter } from './http/all-exceptions.filter';
 import { requestIdMiddleware } from './http/request-id';
 
@@ -16,6 +18,16 @@ export function configureApp(app: NestExpressApplication): void {
   app.disable('x-powered-by');
   app.use(requestIdMiddleware);
   app.useGlobalFilters(new AllExceptionsFilter());
+  // Aspect: every body is checked against its DTO before reaching a handler.
+  // Unknown fields are rejected, not silently dropped (mass assignment).
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      transform: true,
+      exceptionFactory: toValidationException,
+    }),
+  );
   app.setGlobalPrefix(BASE_PATH);
 
   const document = SwaggerModule.createDocument(
