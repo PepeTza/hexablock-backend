@@ -3,6 +3,7 @@ import type { NestExpressApplication } from '@nestjs/platform-express';
 import { Test } from '@nestjs/testing';
 
 import { AppModule } from '../src/frameworks/app.module';
+import type { NodeEnv } from '../src/frameworks/config/environment';
 import { configureApp } from '../src/frameworks/configure-app';
 
 export interface TestAppOptions {
@@ -10,6 +11,8 @@ export interface TestAppOptions {
   readonly overrides?: ReadonlyArray<{ token: unknown; value: unknown }>;
   /** Test-only controllers added next to the real API. */
   readonly controllers?: Type[];
+  /** Environment the API believes it runs in; defaults to `test`. */
+  readonly nodeEnv?: NodeEnv;
 }
 
 /** Builds the whole API exactly as `main.ts` does, for the e2e tests. */
@@ -26,7 +29,7 @@ export async function createTestApp(
   const moduleRef = await builder.compile();
 
   const app = moduleRef.createNestApplication<NestExpressApplication>();
-  configureApp(app);
+  configureApp(app, options.nodeEnv ?? 'test');
   await app.init();
   return app;
 }
