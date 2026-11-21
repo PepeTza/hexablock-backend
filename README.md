@@ -73,7 +73,8 @@ npm run start:dev
 
 - Health check: http://localhost:3000/api/v1/health returns
   `{ "status": "ok", "database": "ok" }`.
-- Swagger UI: http://localhost:3000/api/docs.
+- Swagger UI: http://localhost:3000/api/docs (not served when
+  `NODE_ENV=production`).
 - `npm run db:down` stops the database; its data is kept in a Docker volume.
 
 ### Environment variables
@@ -82,6 +83,7 @@ npm run start:dev
 |---|---|---|
 | `DATABASE_URL` | Yes | PostgreSQL connection string. Locally, the Docker database on port 5433; in production, Supabase. Never committed. |
 | `PORT` | No | Port the API listens on. Defaults to `3000`. |
+| `NODE_ENV` | No | `development`, `test` or `production`. Defaults to `development`. In `production` the Swagger UI is not served. |
 
 The API refuses to start if a variable is missing or malformed.
 
