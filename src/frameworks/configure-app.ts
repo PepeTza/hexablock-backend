@@ -5,6 +5,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { toValidationException } from '../adapters/http/validation/validation-exception';
 import { AllExceptionsFilter } from './http/all-exceptions.filter';
 import { requestIdMiddleware } from './http/request-id';
+import { RequestLoggingInterceptor } from './http/request-logging.interceptor';
 
 // Every route of the contract is relative to this prefix (api-contracts §1).
 export const BASE_PATH = 'api/v1';
@@ -18,6 +19,7 @@ export function configureApp(app: NestExpressApplication): void {
   app.disable('x-powered-by');
   app.use(requestIdMiddleware);
   app.useGlobalFilters(new AllExceptionsFilter());
+  app.useGlobalInterceptors(new RequestLoggingInterceptor());
   // Aspect: every body is checked against its DTO before reaching a handler.
   // Unknown fields are rejected, not silently dropped (mass assignment).
   app.useGlobalPipes(
