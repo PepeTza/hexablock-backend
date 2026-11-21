@@ -1,5 +1,8 @@
-import { INestApplication } from '@nestjs/common';
+import type { NestExpressApplication } from '@nestjs/platform-express';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+
+import { AllExceptionsFilter } from './http/all-exceptions.filter';
+import { requestIdMiddleware } from './http/request-id';
 
 // Every route of the contract is relative to this prefix (api-contracts §1).
 export const BASE_PATH = 'api/v1';
@@ -8,7 +11,11 @@ export const BASE_PATH = 'api/v1';
 export const DOCS_PATH = 'api/docs';
 
 /** Settings shared by the real server (`main.ts`) and the e2e tests. */
-export function configureApp(app: INestApplication): void {
+export function configureApp(app: NestExpressApplication): void {
+  // Do not announce the server technology (decision 22).
+  app.disable('x-powered-by');
+  app.use(requestIdMiddleware);
+  app.useGlobalFilters(new AllExceptionsFilter());
   app.setGlobalPrefix(BASE_PATH);
 
   const document = SwaggerModule.createDocument(
