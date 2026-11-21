@@ -1,7 +1,12 @@
+/** Where the API runs; `production` turns off what only helps developers. */
+export const NODE_ENVS = ['development', 'test', 'production'] as const;
+export type NodeEnv = (typeof NODE_ENVS)[number];
+
 /** Configuration of the API, read once at start-up and already validated. */
 export interface Environment {
   readonly databaseUrl: string;
   readonly port: number;
+  readonly nodeEnv: NodeEnv;
 }
 
 const DEFAULT_PORT = 3000;
@@ -20,11 +25,24 @@ export function validateEnvironment(
 
   const databaseUrl = readDatabaseUrl(variables.DATABASE_URL, problems);
   const port = readPort(variables.PORT, problems);
+  const nodeEnv = readNodeEnv(variables.NODE_ENV, problems);
 
   if (problems.length > 0) {
     throw new Error(`Invalid environment: ${problems.join('; ')}`);
   }
-  return { databaseUrl, port };
+  return { databaseUrl, port, nodeEnv };
+}
+
+function readNodeEnv(value: unknown, problems: string[]): NodeEnv {
+  if (value === undefined || value === '') {
+    return 'development';
+  }
+  const nodeEnv = NODE_ENVS.find((candidate) => candidate === value);
+  if (!nodeEnv) {
+    problems.push(`NODE_ENV must be one of ${NODE_ENVS.join(', ')}`);
+    return 'development';
+  }
+  return nodeEnv;
 }
 
 function readDatabaseUrl(value: unknown, problems: string[]): string {

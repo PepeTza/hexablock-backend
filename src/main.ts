@@ -8,9 +8,9 @@ import { configureApp } from './frameworks/configure-app';
 
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
-  configureApp(app);
-
   const config = app.get<ConfigService<Environment, true>>(ConfigService);
+  configureApp(app, config.get('nodeEnv', { infer: true }));
+
   await app.listen(config.get('port', { infer: true }));
 }
 
