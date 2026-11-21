@@ -62,11 +62,18 @@ Every error response uses the same body:
   "statusCode": 400,
   "error": "Bad Request",
   "message": "username must be between 3 and 20 characters",
-  "details": [{ "field": "username", "issue": "length" }]
+  "details": [{ "field": "username", "issue": "length" }],
+  "requestId": "6f1c2a9e-0000-4000-8000-000000000001"
 }
 ```
 
-`details` is optional.
+- `details` is optional. Each entry names the invalid `field` (nested
+  fields with dots, e.g. `moves.0.x`) and the rule it broke as `issue`
+  (`length`, `int`, `notEmpty`…). A field not defined for the endpoint is
+  rejected with `issue: "notAllowed"`.
+- `requestId` is always present and equals the `X-Request-Id` response
+  header, which every response carries. The server generates it; a value sent
+  by the client is ignored. Quote it when reporting an error.
 
 | Code | Meaning in this API |
 |---|---|
@@ -77,7 +84,32 @@ Every error response uses the same body:
 | `409` | Conflict (e.g. username already taken) |
 | `422` | Well-formed but rejected by a business rule (implausible score, invalid level) |
 | `429` | Rate limit exceeded. Includes `Retry-After` header (seconds) |
+| `500` | Unexpected server error. Always the generic message `Unexpected error` |
 | `503` | Service or database unavailable |
+
+### Error security
+
+Rules every endpoint follows (decision 22):
+
+- A `5xx` never carries detail: no stack trace, SQL, Prisma code, table or
+  column name. The detail is written only to the server log, under the
+  `requestId`.
+- Only errors raised on purpose keep their message. Known database errors
+  are mapped to the contract's own messages (`409 Resource already exists`,
+  `404 Resource not found`), never the driver's text.
+- The log never records request bodies, headers or query strings, so
+  passwords and tokens stay out of it.
+- Responses do not announce the server technology (no `X-Powered-By`).
+- The Swagger UI and the OpenAPI document are not served in production.
+
+Accepted risks:
+
+- `409` on `POST /auth/register` reveals that a username exists. Accepted
+  because players need to know they must pick another name; the register
+  rate limit makes enumerating names slow.
+- `GET /health` is public and reports when the database is down. Accepted
+  because the deployment platform needs it to restart the service; it
+  reveals no address, version or error detail.
 
 ### Rate limits *(proposed)*
 

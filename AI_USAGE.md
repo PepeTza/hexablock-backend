@@ -158,6 +158,28 @@ One entry per significant use. Copy the template.
     `@unique` for a one-to-one relation duplicated a partial index. Both were
     fixed before committing.
 
+### 2026-11-21 — Errors, validation, logging and Swagger
+
+- **Tool / model:** Claude Code, claude-opus-5-5.
+- **Issue / PR:** #18.
+- **Prompt (paraphrase):** implement issue #18 through the harness with
+  Clean Architecture, SOLID and the agreed patterns, applying decision 22 on
+  error security, and explain every commit.
+- **Result:** a global exception filter, validation pipe and logging
+  interceptor (the backend's AOP aspects), a server-generated request id,
+  `ApplicationError` for use cases, Swagger DTOs for `/health` and the error
+  body, `NODE_ENV` validation, and the contract's "Error security" section.
+- **Team modifications:** the owner chose to ignore client-sent request ids
+  and approved the two accepted risks in the contract.
+- **Lessons / limitations:**
+  - Unknown routes never reach an interceptor, so they get no request log
+    line; the exception filter still answers them in the contract's format.
+  - Nest's testing logger prints only errors, so the request log was checked
+    by running the built API, not in the e2e output.
+  - Reading the layer lint rules showed that `src/application` may still
+    import external packages such as `@prisma/client`; reported to the team
+    instead of changed, since it is outside this task.
+
 ## 3. Critical evaluation
 
 To be completed at the end of the project.
