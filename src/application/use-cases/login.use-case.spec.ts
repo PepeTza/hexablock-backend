@@ -1,5 +1,5 @@
 import { User } from '../../domain/user/user';
-import { Username } from '../../domain/user/username';
+import { InvalidUsernameError, Username } from '../../domain/user/username';
 import { ApplicationError } from '../errors/application-error';
 import { IClock } from '../ports/clock';
 import { IPasswordHasher } from '../ports/password-hasher';
@@ -111,4 +111,25 @@ describe('LoginUseCase', () => {
       expect(hasher.compared).toHaveLength(1);
     },
   );
+
+  it('should_surface_the_error_when_a_stored_username_is_corrupt', async () => {
+    // Arrange: the repository fails to rebuild a stored row.
+    const corrupt = new InvalidUsernameError();
+    const users = new InMemoryUserRepository();
+    users.findByUsername = (): Promise<User | null> => Promise.reject(corrupt);
+    const useCase = new LoginUseCase(
+      users,
+      new FakePasswordHasher(),
+      new SessionIssuer(new FakeTokenService(), fixedClock),
+    );
+
+    // Act
+    const login = useCase.execute({
+      username: 'ronald_g',
+      password: 's3cretPass',
+    });
+
+    // Assert: corrupt data is an error, not a hidden "wrong password".
+    await expect(login).rejects.toBe(corrupt);
+  });
 });

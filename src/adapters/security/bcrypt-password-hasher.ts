@@ -36,9 +36,17 @@ export class BcryptPasswordHasher implements IPasswordHasher {
     return compare(password, passwordHash);
   }
 
-  /** Computed once, with the same cost as real hashes. */
+  /**
+   * Computed once, with the same cost as real hashes. A failed attempt is
+   * forgotten, so the next login retries instead of failing forever.
+   */
   private getDummyHash(): Promise<string> {
-    this.dummyHash ??= hash('no-user-has-this-password', this.cost);
+    this.dummyHash ??= hash('no-user-has-this-password', this.cost).catch(
+      (error: unknown) => {
+        this.dummyHash = undefined;
+        throw error;
+      },
+    );
     return this.dummyHash;
   }
 }

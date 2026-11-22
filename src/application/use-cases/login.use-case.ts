@@ -1,13 +1,11 @@
 import type { User } from '../../domain/user/user';
 import { InvalidUsernameError, Username } from '../../domain/user/username';
 import { ApplicationError } from '../errors/application-error';
+import { INVALID_CREDENTIALS_MESSAGE } from '../errors/auth-messages';
 import type { IPasswordHasher } from '../ports/password-hasher';
 import type { IUserRepository } from '../ports/user-repository';
 import type { Credentials } from './credentials';
 import type { AuthSession, SessionIssuer } from './session-issuer';
-
-/** The only message of a failed login (CU-11 A1). */
-export const INVALID_CREDENTIALS_MESSAGE = 'invalid username or password';
 
 /**
  * CU-11: checks the password and starts a session. Every failure gives the
@@ -33,15 +31,21 @@ export class LoginUseCase {
     return this.sessions.issueFor(user);
   }
 
-  /** A name that breaks the format cannot exist, so it is just "not found". */
+  /**
+   * A typed name that breaks the format cannot exist, so it is just "not
+   * found". Only the player's input is caught here: an invalid name read
+   * from storage is corrupt data and must surface as an error, not a 401.
+   */
   private async findUser(raw: string): Promise<User | null> {
+    let username: Username;
     try {
-      return await this.users.findByUsername(Username.create(raw));
+      username = Username.create(raw);
     } catch (error) {
       if (error instanceof InvalidUsernameError) {
         return null;
       }
       throw error;
     }
+    return this.users.findByUsername(username);
   }
 }

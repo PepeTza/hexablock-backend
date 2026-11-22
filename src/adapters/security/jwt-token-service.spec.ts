@@ -58,6 +58,16 @@ describe('JwtTokenService', () => {
           sub: 'user-1',
           username: 'ronald_g',
           role: 'superuser',
+          exp: Math.floor(IN_ONE_HOUR().getTime() / 1000),
+        }),
+    ],
+    [
+      'without an expiry',
+      () =>
+        new JwtService({ secret: SECRET }).signAsync({
+          sub: 'user-1',
+          username: 'ronald_g',
+          role: 'player',
         }),
     ],
     ['malformed', () => Promise.resolve('not-a-token')],

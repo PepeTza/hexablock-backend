@@ -24,9 +24,9 @@ describe('Username', () => {
     },
   );
 
-  // 'K' (U+212A, Kelvin sign) becomes the ASCII 'k' when lower-cased, so the
+  // The Kelvin sign (U+212A) becomes the ASCII 'k' when lower-cased, so the
   // rule must be checked before lower-casing, not after.
-  it.each(['ronald g', 'ronald-g', 'peña', 'ronald!', 'Kenneth'])(
+  it.each(['ronald g', 'ronald-g', 'peña', 'ronald!', '\u212Aenneth'])(
     'should_reject_the_name_when_it_has_characters_other_than_letters_digits_or_underscore (%s)',
     (raw) => {
       // Arrange
