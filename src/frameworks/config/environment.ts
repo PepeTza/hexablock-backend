@@ -7,11 +7,15 @@ export interface Environment {
   readonly databaseUrl: string;
   readonly port: number;
   readonly nodeEnv: NodeEnv;
+  /** Signs and verifies the JWTs (RNF-10); never committed. */
+  readonly jwtSecret: string;
 }
 
 const DEFAULT_PORT = 3000;
 const MAX_PORT = 65535;
 const POSTGRES_PROTOCOLS = ['postgresql:', 'postgres:'];
+// 32 characters give HS256 a key of at least 256 bits, as RFC 7518 §3.2 asks.
+const MIN_JWT_SECRET_LENGTH = 32;
 
 /**
  * Turns the raw environment variables into a typed `Environment`.
@@ -26,11 +30,25 @@ export function validateEnvironment(
   const databaseUrl = readDatabaseUrl(variables.DATABASE_URL, problems);
   const port = readPort(variables.PORT, problems);
   const nodeEnv = readNodeEnv(variables.NODE_ENV, problems);
+  const jwtSecret = readJwtSecret(variables.JWT_SECRET, problems);
 
   if (problems.length > 0) {
     throw new Error(`Invalid environment: ${problems.join('; ')}`);
   }
-  return { databaseUrl, port, nodeEnv };
+  return { databaseUrl, port, nodeEnv, jwtSecret };
+}
+
+function readJwtSecret(value: unknown, problems: string[]): string {
+  if (typeof value !== 'string' || value === '') {
+    problems.push('JWT_SECRET is required');
+    return '';
+  }
+  if (value.length < MIN_JWT_SECRET_LENGTH) {
+    problems.push(
+      `JWT_SECRET must be at least ${MIN_JWT_SECRET_LENGTH} characters`,
+    );
+  }
+  return value;
 }
 
 function readNodeEnv(value: unknown, problems: string[]): NodeEnv {
