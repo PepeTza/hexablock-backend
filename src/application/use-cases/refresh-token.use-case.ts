@@ -1,9 +1,7 @@
 import { ApplicationError } from '../errors/application-error';
+import { INVALID_TOKEN_MESSAGE } from '../errors/auth-messages';
 import type { IUserRepository } from '../ports/user-repository';
 import type { AuthSession, SessionIssuer } from './session-issuer';
-
-/** Message of every rejected token (api-contracts §3, refresh). */
-export const INVALID_TOKEN_MESSAGE = 'invalid or expired token';
 
 export interface RefreshInput {
   /** Owner of the token, already verified by the JWT guard. */

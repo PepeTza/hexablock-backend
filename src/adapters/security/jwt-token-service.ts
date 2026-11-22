@@ -1,11 +1,11 @@
 import { JwtService } from '@nestjs/jwt';
 
 import { ApplicationError } from '../../application/errors/application-error';
+import { INVALID_TOKEN_MESSAGE } from '../../application/errors/auth-messages';
 import {
   ITokenService,
   TokenClaims,
 } from '../../application/ports/token-service';
-import { INVALID_TOKEN_MESSAGE } from '../../application/use-cases/refresh-token.use-case';
 import { Role, ROLES } from '../../domain/user/role';
 
 // Only HMAC-SHA256 is accepted, so a token cannot choose a weaker algorithm
@@ -61,15 +61,20 @@ function invalidToken(): ApplicationError {
   return new ApplicationError('unauthorized', INVALID_TOKEN_MESSAGE);
 }
 
-/** A correctly signed token still needs the fields the API relies on. */
+/**
+ * A correctly signed token still needs the fields the API relies on. `exp`
+ * is required too: jsonwebtoken only checks it when present, so a signed
+ * token without it would never expire.
+ */
 function isPayload(value: unknown): value is JwtPayload {
   if (typeof value !== 'object' || value === null) {
     return false;
   }
-  const { sub, username, role } = value as Record<string, unknown>;
+  const { sub, username, role, exp } = value as Record<string, unknown>;
   return (
     typeof sub === 'string' &&
     typeof username === 'string' &&
+    typeof exp === 'number' &&
     ROLES.some((known) => known === role)
   );
 }

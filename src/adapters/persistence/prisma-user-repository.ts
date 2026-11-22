@@ -1,8 +1,8 @@
 import { Prisma, PrismaClient, User as UserRow } from '@prisma/client';
 
 import { ApplicationError } from '../../application/errors/application-error';
+import { USERNAME_TAKEN_MESSAGE } from '../../application/errors/auth-messages';
 import { IUserRepository } from '../../application/ports/user-repository';
-import { USERNAME_TAKEN_MESSAGE } from '../../application/use-cases/register-user.use-case';
 import { NewUser, User } from '../../domain/user/user';
 import { Username } from '../../domain/user/username';
 
