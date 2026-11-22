@@ -4,8 +4,10 @@ import { IPasswordHasher } from '../../application/ports/password-hasher';
 
 /**
  * bcrypt work factor: each step doubles the time to compute a hash. 12 takes
- * a fraction of a second per login and makes guessing passwords slow (OWASP
- * Password Storage Cheat Sheet recommends at least 10).
+ * a fraction of a second per login and makes guessing passwords slow. Source:
+ * OWASP, "Password Storage Cheat Sheet", bcrypt section (work factor of at
+ * least 10, 72-byte input limit):
+ * https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html
  */
 export const DEFAULT_BCRYPT_COST = 12;
 
