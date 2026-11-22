@@ -34,6 +34,49 @@ describe('BcryptPasswordHasher', () => {
     await expect(hasher.matches('s3cretPasS', hash)).resolves.toBe(false);
   });
 
+  it('should_not_match_when_the_password_has_more_than_72_bytes_even_if_its_first_72_match', async () => {
+    // Arrange: bcrypt alone would ignore everything after byte 72.
+    const hasher = new BcryptPasswordHasher(TEST_COST);
+    const password = 'a'.repeat(72);
+    const hash = await hasher.hash(password);
+
+    // Act
+    const matches = await hasher.matches(`${password}extra`, hash);
+
+    // Assert
+    expect(matches).toBe(false);
+    await expect(hasher.matches(password, hash)).resolves.toBe(true);
+  });
+
+  it('should_match_when_a_multibyte_password_has_exactly_72_bytes', async () => {
+    // Arrange: 70 ASCII bytes plus 'ñ', which takes 2 bytes in UTF-8.
+    const hasher = new BcryptPasswordHasher(TEST_COST);
+    const password = `${'a'.repeat(70)}ñ`;
+    const hash = await hasher.hash(password);
+
+    // Act
+    const matches = await hasher.matches(password, hash);
+
+    // Assert
+    expect(matches).toBe(true);
+  });
+
+  it('should_not_match_when_a_multibyte_password_has_72_characters_but_74_bytes', async () => {
+    // Arrange: the stored password is 72 bytes; the attempt adds one more
+    // 'ñ', so it has 72 characters, 74 bytes, and the same first 72 bytes.
+    // bcrypt alone would accept it.
+    const hasher = new BcryptPasswordHasher(TEST_COST);
+    const stored = `${'a'.repeat(70)}ñ`;
+    const hash = await hasher.hash(stored);
+    const password = `${stored}ñ`;
+
+    // Act
+    const matches = await hasher.matches(password, hash);
+
+    // Assert
+    expect(matches).toBe(false);
+  });
+
   it('should_retry_the_dummy_hash_when_computing_it_failed_once', async () => {
     // Arrange: the first dummy hash fails, as a transient native error would.
     const hasher = new BcryptPasswordHasher(TEST_COST);
