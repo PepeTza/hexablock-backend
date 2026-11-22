@@ -1,6 +1,7 @@
 import { compare, hash } from 'bcrypt';
 
 import { IPasswordHasher } from '../../application/ports/password-hasher';
+import { MAX_PASSWORD_BYTES } from '../../domain/user/password-rules';
 
 /**
  * bcrypt work factor: each step doubles the time to compute a hash. 12 takes
@@ -30,9 +31,13 @@ export class BcryptPasswordHasher implements IPasswordHasher {
     password: string,
     passwordHash: string | null,
   ): Promise<boolean> {
-    if (passwordHash === null) {
-      // Same work as a real comparison, so a missing user is not faster.
-      await compare(password, await this.getDummyHash());
+    const tooLong = Buffer.byteLength(password, 'utf8') > MAX_PASSWORD_BYTES;
+    // Two failures share this branch: no user (compare with the dummy hash)
+    // and a password over the limit (compare with the real hash and ignore
+    // the result, since bcrypt would accept it by truncating). Both still do
+    // a full comparison, so a failure is never faster than a real login.
+    if (passwordHash === null || tooLong) {
+      await compare(password, passwordHash ?? (await this.getDummyHash()));
       return false;
     }
     return compare(password, passwordHash);

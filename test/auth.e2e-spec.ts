@@ -139,6 +139,25 @@ describe('Auth (e2e)', () => {
     });
   });
 
+  it('should_return_401_when_logging_in_with_the_password_plus_extra_characters', async () => {
+    // Arrange: a 72-byte password, the longest register accepts.
+    const username = uniqueName();
+    const password = 'p'.repeat(72);
+    await post('register', { username, password }).expect(201);
+
+    // Act: bcrypt alone would ignore the extra characters and accept it.
+    const response = await post('login', {
+      username,
+      password: `${password}extra`,
+    });
+
+    // Assert
+    expect(response.status).toBe(401);
+    expect(response.body).toMatchObject({
+      message: 'invalid username or password',
+    });
+  });
+
   it('should_return_429_with_retry_after_on_the_sixth_login_attempt_in_a_minute', async () => {
     // Arrange
     const username = uniqueName();

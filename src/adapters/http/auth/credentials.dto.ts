@@ -8,10 +8,10 @@ import {
   MinLength,
 } from 'class-validator';
 
-const MIN_PASSWORD_LENGTH = 8;
-// bcrypt reads only the first 72 bytes of a password (decision 21). Every
-// character takes at least one byte, so this also caps it at 72 characters.
-const MAX_PASSWORD_BYTES = 72;
+import {
+  MAX_PASSWORD_BYTES,
+  MIN_PASSWORD_LENGTH,
+} from '../../../domain/user/password-rules';
 
 /**
  * Body of `POST /auth/register` (api-contracts §3). Checks the format rules
