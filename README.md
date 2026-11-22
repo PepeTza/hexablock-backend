@@ -84,6 +84,7 @@ npm run start:dev
 | `DATABASE_URL` | Yes | PostgreSQL connection string. Locally, the Docker database on port 5433; in production, Supabase. Never committed. |
 | `PORT` | No | Port the API listens on. Defaults to `3000`. |
 | `NODE_ENV` | No | `development`, `test` or `production`. Defaults to `development`. In `production` the Swagger UI is not served. |
+| `JWT_SECRET` | Yes | Signs and verifies the access tokens. At least 32 characters; use a random value, for example from `openssl rand -base64 32`. Never committed. |
 
 The API refuses to start if a variable is missing or malformed.
 
@@ -128,10 +129,12 @@ and the [`harness/`](./harness/README.md).
 
 External sources of algorithms and ideas. We reimplement them; we do not copy
 their code. Each one is also cited in a comment in the file that uses it.
-None yet.
 
 | Source | What we took | Where |
 |---|---|---|
+| OWASP, [Password Storage Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html) | bcrypt work factor of at least 10 (we use 12) and its 72-byte input limit | `src/adapters/security/bcrypt-password-hasher.ts` |
+| OWASP, [Authentication Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Authentication_Cheat_Sheet.html) | One generic login error and equal response time, so usernames cannot be enumerated | `src/application/use-cases/login.use-case.ts` |
+| IETF, [RFC 7518 §3.2](https://www.rfc-editor.org/rfc/rfc7518#section-3.2) | HS256 keys of at least 256 bits (`JWT_SECRET` of 32+ characters) | `src/frameworks/config/environment.ts` |
 
 ## Contributing
 

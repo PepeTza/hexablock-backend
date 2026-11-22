@@ -14,7 +14,8 @@ export interface Environment {
 const DEFAULT_PORT = 3000;
 const MAX_PORT = 65535;
 const POSTGRES_PROTOCOLS = ['postgresql:', 'postgres:'];
-// 32 characters give HS256 a key of at least 256 bits, as RFC 7518 §3.2 asks.
+// 32 characters give HS256 a key of at least 256 bits. Source: IETF, RFC 7518
+// "JSON Web Algorithms", §3.2: https://www.rfc-editor.org/rfc/rfc7518#section-3.2
 const MIN_JWT_SECRET_LENGTH = 32;
 
 /**

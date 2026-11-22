@@ -9,7 +9,10 @@ import type { AuthSession, SessionIssuer } from './session-issuer';
 
 /**
  * CU-11: checks the password and starts a session. Every failure gives the
- * same error, so a client cannot learn whether the username exists.
+ * same error and takes the same time, so a client cannot learn whether the
+ * username exists. Source: OWASP, "Authentication Cheat Sheet", section
+ * "Authentication and Error Messages":
+ * https://cheatsheetseries.owasp.org/cheatsheets/Authentication_Cheat_Sheet.html
  */
 export class LoginUseCase {
   constructor(

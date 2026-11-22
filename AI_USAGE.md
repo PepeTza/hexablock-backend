@@ -180,6 +180,49 @@ One entry per significant use. Copy the template.
     import external packages such as `@prisma/client`; reported to the team
     instead of changed, since it is outside this task.
 
+### 2026-11-22 — Register, login and refresh with JWT
+
+- **Tool / model:** Claude Code, claude-opus-5-5; the Gentle AI review tool
+  ran four automated reviewer lenses (risk, resilience, readability,
+  reliability) on the commits.
+- **Issue / PR:** #19.
+- **Prompt (paraphrase):** settle decision 21 (contract values), then
+  implement issue #19 through the harness with Clean Architecture, SOLID and
+  the agreed patterns, explaining every commit in plain language.
+- **Result:** the first `src/domain` code (`User`, `Username`), the user
+  repository, password hasher, token service and clock ports, the register,
+  login and refresh use cases, Prisma, bcrypt and JWT adapters, the auth
+  controller with DTOs, a JWT guard and throttler guards, `JWT_SECRET`
+  validation, and unit and e2e tests for every status code of the contract.
+- **Team modifications:**
+  - The AI found that bcrypt reads only the first 72 bytes, not characters,
+    so the owner added "at most 72 bytes in UTF-8" to decision 21; the
+    proposed contract would have truncated long non-ASCII passwords silently.
+  - The owner approved four changes to the plan found while building: the
+    guards live in adapters (the layer lint forbids adapters importing
+    frameworks), a separate login DTO so a bad format gets the generic 401,
+    the owner adds `JWT_SECRET` to `.env.example` by hand, and five existing
+    environment tests gain the new variable.
+  - The automated review found real issues that were fixed in their own
+    commit: a JWT without `exp` would never expire, login hid a corrupt
+    stored username behind a 401, a failed dummy hash stayed cached, and
+    adapters imported messages from concrete use cases.
+- **Lessons / limitations:**
+  - The plan used commit scopes (`deps`, `domain`, `application`) that
+    commitlint rejects; the hook caught it and the scopes were remapped.
+  - The AI's file tool turned the Unicode escape for U+212A (a backslash
+    followed by `u212A`) into the invisible Kelvin sign, and a `sed` fix then
+    dropped the backslash, which would have broken the test; both were caught
+    by checking the file's bytes. The same tool did it again in this entry.
+  - The AI first tampered with a JWT's last character, which may only hold
+    padding bits; it was changed to the first character of the signature.
+  - The AI told the owner three existing tests would change; it was five.
+  - Open follow-ups from the review: a per-IP login limit (password spraying,
+    bcrypt cost and in-memory keys; it changes the contract), a test that
+    proves the username-and-IP tracker, a maximum session age (refresh uses
+    the access token itself, as the contract defines), and `trust proxy` when
+    deploying behind a proxy (#20).
+
 ## 3. Critical evaluation
 
 To be completed at the end of the project.
