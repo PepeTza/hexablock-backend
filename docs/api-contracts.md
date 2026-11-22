@@ -111,7 +111,7 @@ Accepted risks:
   because the deployment platform needs it to restart the service; it
   reveals no address, version or error detail.
 
-### Rate limits *(proposed)*
+### Rate limits
 
 | Endpoint | Limit |
 |---|---|
@@ -150,11 +150,13 @@ Request:
 { "username": "ronald_g", "password": "s3cretPass" }
 ```
 
-Validation *(proposed)*:
+Validation (decision 21):
 
-- `username`: 3–20 characters, letters, digits and `_`; unique,
-  case-insensitive.
-- `password`: 8–72 characters.
+- `username`: 3–20 characters, ASCII letters (`a–z`, `A–Z`), digits and `_`;
+  unique, case-insensitive. It is stored and returned in lower case.
+- `password`: 8–72 characters and at most 72 bytes in UTF-8, because bcrypt
+  ignores everything after the first 72 bytes. A longer password is rejected
+  with `400` and `issue: "byteLength"` instead of being silently truncated.
 
 The password is stored hashed, never in plain text (RNF-10). The new user gets
 `role = player`. There is no email (RN-42).
