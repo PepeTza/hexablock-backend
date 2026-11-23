@@ -7,9 +7,10 @@ services:
     name: hexablock-api
     runtime: node
     plan: free
-    # Render's Oregon region; the Supabase project uses its Oregon region
-    # too (us-west-2), so queries stay inside one area.
-    region: oregon
+    # Render's Virginia region; the Supabase project is in East US (North
+    # Virginia, us-east-1), so queries stay inside one area. Of Render's
+    # regions, it is the closest to the players in Latin America.
+    region: virginia
     branch: main
     # Deploy a commit of `main` only when its GitHub checks (ci.yml) pass.
     autoDeployTrigger: checksPass
