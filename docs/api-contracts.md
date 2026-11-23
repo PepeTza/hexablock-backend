@@ -370,17 +370,63 @@ order (RN-37).
 | `spec` | Variant-specific content |
 | `publishedAt` | Set by the server |
 
+A change to the format of a `spec` creates a new `schemaVersion`; published
+levels keep the version they were published with (RN-37).
+
 #### `spec` for `hexa-fit` — **TBD**
 
 Will contain: the target figure (set of cells), the pieces from the catalog
 (D-07) and the score thresholds for 1, 2 and 3 stars. Defined after the Hexa
 Fit class diagram.
 
-#### `spec` for `hexa-sort` — **TBD**
+#### `spec` for `hexa-sort` — `schemaVersion` 1
 
-Will contain: the initial board (blocked cells and pre-placed stacks), colors,
-tray stack parameters and goals. The seed mode is **not** part of the level
-(it lives in seed config, RN-05). Defined after the Hexa Sort class diagram.
+```json
+{
+  "radius": 2,
+  "blocked": [{ "q": 0, "r": 0 }],
+  "initialStacks": [{ "cell": { "q": 1, "r": -1 }, "chips": [0, 0, 1] }],
+  "colors": 4,
+  "tray": { "size": 1, "minHeight": 2, "maxHeight": 6, "maxColorsPerStack": 2 },
+  "goals": 5
+}
+```
+
+| Field | Type and range | Description |
+|---|---|---|
+| `radius` | integer, always `2` in v1 | The board is the hexagon of radius 2 around `(0, 0)`: 19 cells, as the project statement requires. Another size needs a new `schemaVersion` |
+| `blocked` | array of `{ q, r }` | Cells that can never hold a stack. May be empty |
+| `initialStacks` | array of `{ cell, chips }` | Stacks already on the board when the level starts. May be empty |
+| `initialStacks[].cell` | `{ q, r }` | Where the stack is |
+| `initialStacks[].chips` | array of 1–9 integers | The colors of the chips, **from bottom to top** |
+| `colors` | integer, 2–8 | Number of colors in the level. A chip is a color index from `0` to `colors - 1`; the client chooses the palette |
+| `tray.size` | integer, always `1` in v1 | Stacks the tray offers at a time: one, as the statement and RN-20 say |
+| `tray.minHeight`, `tray.maxHeight` | integers, 1–9, `minHeight ≤ maxHeight` | Height range of the stacks generated with the seed |
+| `tray.maxColorsPerStack` | integer, 1 to `colors` | Most different colors a generated stack can have |
+| `goals` | integer, 1–99 | Stacks removed (10 chips of one color) needed to win (RN-24) |
+
+Cells use the axial coordinates `q, r` of the client engine (`HexCoord`). A
+cell is on the board when `max(|q|, |r|, |q + r|) ≤ radius`. Source: Red
+Blob Games, "Hexagonal Grids", sections "Axial coordinates" and "Distances"
+(https://www.redblobgames.com/grids/hexagons/).
+
+When a stack gathers 10 chips of the same color, the **whole stack** is
+removed from the board and counts as one goal, as the project statement says.
+Stacks start with at most 9 chips, so no stack can start already complete.
+Colors are indexes, not names or codes, so the client can change its palette
+(theme, color blindness) without touching published levels (RN-37).
+
+Besides the types and ranges above, the server rejects a `hexa-sort` level
+with `422` when:
+
+1. a cell of `blocked` or `initialStacks` is outside the board;
+2. a cell appears twice, inside one list or across both;
+3. a chip is not a color index lower than `colors`;
+4. no free cell is left to place a stack.
+
+The server does **not** check whether the level can be won: the admin panel
+and the game do (D-16). The seed mode is not part of the level either; it
+lives in seed config (section 7, RN-05).
 
 ### `GET /levels/{gameId}?after={order}` — public (CU-15)
 
@@ -509,7 +555,6 @@ Response `503` if the database does not respond:
 | Item | Depends on |
 |---|---|
 | `spec` schema for `hexa-fit` | Hexa Fit class diagram, piece catalog (D-07) |
-| `spec` schema for `hexa-sort` | Hexa Sort class diagram |
 | Plausibility thresholds per variant for `POST /scores` | Scoring spec (RN-10, D-08) |
 | Final rate-limit values | Team decision |
 | Username and password rules | Team decision |
