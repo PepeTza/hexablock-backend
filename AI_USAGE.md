@@ -306,6 +306,31 @@ One entry per significant use. Copy the template.
   - A replayed `sessionId` returns the current rank, which can differ from
     the first answer if other players moved meanwhile.
 
+### 2026-11-23 — Deploy the backend on merge to main
+
+- **Tool / model:** Claude Code, claude-opus-5-5.
+- **Issue / PR:** #20.
+- **Prompt (paraphrase):** pick the most urgent open issue and implement it
+  through the harness, explaining every commit and how to test it.
+- **Result:** `TRUST_PROXY_HOPS` and the matching `trust proxy` setting
+  with unit and e2e tests (including a spoofed `X-Forwarded-For` chain), a
+  Render Blueprint (`render.yaml`) and the deployment docs.
+- **Team modifications:**
+  - The plan hard-coded `trust proxy` to 1. An automated review warned it
+    would trust a client-written header wherever no proxy exists; it became
+    an environment variable that defaults to 0, approved by the owner.
+  - The review also led to strict digit-only parsing of the variable and
+    tests for its bounds.
+- **Lessons / limitations:**
+  - Deployment facts were checked in the Render and Supabase docs before
+    planning: free instances have no pre-deploy command, and Supabase's
+    direct connection is IPv6 only, which Render cannot reach.
+  - The deploy itself cannot be tested locally; it is verified on Render
+    after the merge (`/api/v1/health` answers 200).
+  - A manual test command first failed because Windows PowerShell 5.1 strips
+    the double quotes of a JSON argument passed to `curl.exe`; the body was
+    sent from a file instead.
+
 ## 3. Critical evaluation
 
 To be completed at the end of the project.
