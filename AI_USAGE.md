@@ -253,6 +253,31 @@ One entry per significant use. Copy the template.
   - A long shell command with several heredocs failed as a whole and wrote
     nothing; the files were then written one by one.
 
+### 2026-11-23 — Hexa Sort level spec v1
+
+- **Tool / model:** Claude Code, claude-opus-5-5.
+- **Issue / PR:** #32 (Hexa Sort part).
+- **Prompt (paraphrase):** define the `spec` of Hexa Sort levels in the API
+  contract through the harness, then check the project statement against
+  both repositories.
+- **Result:** the `schemaVersion` 1 format with an example, field ranges,
+  four format rules for the server and a note on new schema versions; and a
+  read-only audit of the statement against both repositories.
+- **Team modifications:**
+  - The AI first proposed a radius of 2 to 4 and a tray of 1 to 3 stacks,
+    checked only against the team's decision 10. The owner shared the
+    statement, which fixes a radius 2 board of 19 cells and a tray of one
+    stack; both values were corrected before the commit.
+  - The statement removes the whole stack at 10 chips of one color, while
+    RN-23 cleared only the run. The owner chose the statement; the client
+    business rules still have to be updated.
+- **Lessons / limitations:**
+  - A team decision is not the source of truth: numeric rules must be
+    checked against the statement first.
+  - The audit also found that diagram sources must be editable files in the
+    repository, not only Lucidchart links, and that the client plan still
+    says a tray of 3 stacks (decision 11).
+
 ## 3. Critical evaluation
 
 To be completed at the end of the project.
