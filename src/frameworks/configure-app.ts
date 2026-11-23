@@ -16,14 +16,22 @@ export const DOCS_PATH = 'api/docs';
 
 /**
  * Settings shared by the real server (`main.ts`) and the e2e tests.
- * `nodeEnv` comes from the validated environment.
+ * `nodeEnv` and `trustProxyHops` come from the validated environment.
  */
 export function configureApp(
   app: NestExpressApplication,
   nodeEnv: NodeEnv,
+  trustProxyHops: number,
 ): void {
   // Do not announce the server technology (decision 22).
   app.disable('x-powered-by');
+  // Behind N proxies, each appends the caller's IP to X-Forwarded-For.
+  // Trusting exactly N hops makes `req.ip` the real client, so rate limits
+  // count each player apart; trusting more (or `true`) would let a client
+  // fake its IP with its own header. With no proxy (`0`), the header is
+  // ignored. Render runs one proxy (D-10). Source: Express docs, "Express
+  // behind proxies": https://expressjs.com/en/guide/behind-proxies.html
+  app.set('trust proxy', trustProxyHops);
   app.use(requestIdMiddleware);
   app.useGlobalFilters(new AllExceptionsFilter());
   app.useGlobalInterceptors(new RequestLoggingInterceptor());

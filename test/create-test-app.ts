@@ -13,6 +13,8 @@ export interface TestAppOptions {
   readonly controllers?: Type[];
   /** Environment the API believes it runs in; defaults to `test`. */
   readonly nodeEnv?: NodeEnv;
+  /** Proxies the API trusts, as `TRUST_PROXY_HOPS`; defaults to none. */
+  readonly trustProxyHops?: number;
 }
 
 /** Builds the whole API exactly as `main.ts` does, for the e2e tests. */
@@ -29,7 +31,7 @@ export async function createTestApp(
   const moduleRef = await builder.compile();
 
   const app = moduleRef.createNestApplication<NestExpressApplication>();
-  configureApp(app, options.nodeEnv ?? 'test');
+  configureApp(app, options.nodeEnv ?? 'test', options.trustProxyHops ?? 0);
   await app.init();
   return app;
 }
