@@ -24,6 +24,25 @@ describe('toErrorResponse', () => {
     expect(JSON.stringify(body)).not.toContain('password_hash');
   });
 
+  it('should_return_400_for_an_invalid_application_error', () => {
+    // Arrange
+    const error = new ApplicationError(
+      'invalid',
+      'unknown levelId for this game',
+    );
+
+    // Act
+    const body = toErrorResponse(error, REQUEST_ID);
+
+    // Assert
+    expect(body).toEqual({
+      statusCode: 400,
+      error: 'Bad Request',
+      message: 'unknown levelId for this game',
+      requestId: REQUEST_ID,
+    });
+  });
+
   it('should_map_a_conflict_application_error_to_409', () => {
     // Arrange
     const error = new ApplicationError('conflict', 'Username already taken');
