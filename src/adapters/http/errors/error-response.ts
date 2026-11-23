@@ -30,6 +30,7 @@ export interface ErrorResponse {
 export const UNEXPECTED_ERROR_MESSAGE = 'Unexpected error';
 
 const KIND_STATUS: Record<ApplicationErrorKind, HttpStatus> = {
+  invalid: HttpStatus.BAD_REQUEST,
   conflict: HttpStatus.CONFLICT,
   not_found: HttpStatus.NOT_FOUND,
   unauthorized: HttpStatus.UNAUTHORIZED,
