@@ -288,10 +288,27 @@ The server validates (RN-39):
 
 1. The token is valid.
 2. The format is valid.
-3. The values are plausible for the game: e.g. the maximum score reachable
-   with that `moveCount`, or the minimum time per level. Thresholds are
-   defined per variant (**TBD**, scoring spec).
+3. The values are plausible for the game (see the table below).
 4. The rate limit is respected.
+
+Plausibility limits, with `n` = `moveCount`. They are theoretical maxima of
+the scoring rules, deliberately loose so an honest score is never rejected;
+they change only if the scoring rules change (decision 8):
+
+| Game | Highest plausible `score` | Derived from |
+|---|---|---|
+| All | `0` when `n = 0`; and `durationMs ≥ 100·n` | No move is faster than 100 ms |
+| `hexa-lines` | `5n + 1125·(n(n+1)/2 + n)` | D-08: a piece of at most 5 cells completes at most 15 lines, and the streak on move `m` is at most `m` |
+| `hexa-merge` | `4·(19n + n(n+1)/2)` | RN-28, RN-29: merging keeps the board's value, and each move adds a tile of at most 4 to a board of 19 cells |
+| `hexa-sort` | `171·(19 + n)` | RN-40: at most 19 initial stacks of 9 chips plus 9 chips per move, times at most 19 goals per cascade |
+| `hexa-fit` | `1000` | Decision 8: `max(100, 1000 − 20·extraMoves − 2·seconds)` |
+
+Other cases:
+
+- A `levelId` that is not a published level of `gameId` → `400`.
+- A `sessionId` already sent by **another** player → `400`.
+- A `sessionId` that was rejected as implausible → `422` again on every
+  retry.
 
 If the score is the player's best for that table, the server updates their
 leaderboard entry (RN-43). Ties are ordered by the earliest `finishedAt`.
@@ -555,6 +572,5 @@ Response `503` if the database does not respond:
 | Item | Depends on |
 |---|---|
 | `spec` schema for `hexa-fit` | Hexa Fit class diagram, piece catalog (D-07) |
-| Plausibility thresholds per variant for `POST /scores` | Scoring spec (RN-10, D-08) |
 | Final rate-limit values | Team decision |
 | Username and password rules | Team decision |
