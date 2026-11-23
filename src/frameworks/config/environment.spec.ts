@@ -36,6 +36,17 @@ describe('validateEnvironment', () => {
     expect(environment.trustProxyHops).toBe(0);
   });
 
+  it('should_trust_no_proxy_when_trust_proxy_hops_is_empty', () => {
+    // Act
+    const environment = validateEnvironment({
+      ...REQUIRED,
+      TRUST_PROXY_HOPS: '',
+    });
+
+    // Assert
+    expect(environment.trustProxyHops).toBe(0);
+  });
+
   it('should_read_trust_proxy_hops_when_it_is_set', () => {
     // Act
     const environment = validateEnvironment({

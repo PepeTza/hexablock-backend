@@ -7,7 +7,8 @@ services:
     name: hexablock-api
     runtime: node
     plan: free
-    # Same area as the Supabase project (us-west-1), to keep queries fast.
+    # Render's Oregon region; the Supabase project uses its Oregon region
+    # too (us-west-2), so queries stay inside one area.
     region: oregon
     branch: main
     # Deploy a commit of `main` only when its GitHub checks (ci.yml) pass.
@@ -16,8 +17,12 @@ services:
     # needs the Nest CLI and the Prisma CLI, which are devDependencies.
     buildCommand: npm ci --include=dev && npm run build
     # Free instances have no pre-deploy command, so the pending migrations
-    # are applied at start. If they fail, the new version never becomes
-    # healthy and Render keeps serving the previous one.
+    # are applied at start. If one fails, the new version never becomes
+    # healthy and Render keeps serving the previous one; but a migration that
+    # failed halfway can leave the schema half changed, which must be fixed
+    # by hand (README -> Deployment). This also runs on every wake from
+    # sleep, adding a few seconds; with no pending migration it changes
+    # nothing.
     startCommand: npx prisma migrate deploy && npm run start:prod
     # Render waits for a 2xx here before sending traffic to a new version.
     healthCheckPath: /api/v1/health
