@@ -134,9 +134,19 @@ requests.
   production.
 - **What it runs:** `npm ci --include=dev && npm run build`, then
   `npx prisma migrate deploy && npm run start:prod`. Migrations run at start
-  because free instances have no pre-deploy step; if they fail, the new
+  because free instances have no pre-deploy step, so they also run (and
+  change nothing) on every wake from sleep. If a migration fails, the new
   version never passes the health check and the previous one keeps serving.
+  A migration that fails halfway, though, can leave the schema half changed:
+  `npx prisma migrate status` shows it as failed, and it must be fixed by
+  hand and marked with `npx prisma migrate resolve` before the next deploy.
 - **Health check:** `GET /api/v1/health` must answer `200`.
+- **Regions:** Render in Oregon and the Supabase project in West US (Oregon,
+  `us-west-2`), so every query stays in one area.
+- **Check after the first deploy:** `render.yaml` trusts one proxy
+  (`TRUST_PROXY_HOPS=1`). Register from two networks (for example Wi-Fi and
+  mobile data) six times each within a minute: each network must get its own
+  `429`. If both share one, Render adds more hops than expected.
 
 | Variable | Where it comes from |
 |---|---|
