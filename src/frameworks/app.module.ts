@@ -8,6 +8,7 @@ import { validateEnvironment } from './config/environment';
 import { HealthModule } from './health/health.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { ProgressModule } from './progress/progress.module';
+import { ScoresModule } from './scores/scores.module';
 
 /** Root module: every feature module of the API is imported here. */
 @Module({
@@ -26,6 +27,7 @@ import { ProgressModule } from './progress/progress.module';
     HealthModule,
     AuthModule,
     ProgressModule,
+    ScoresModule,
   ],
 })
 export class AppModule {}
