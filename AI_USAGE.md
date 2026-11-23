@@ -278,6 +278,34 @@ One entry per significant use. Copy the template.
     repository, not only Lucidchart links, and that the client plan still
     says a tray of 3 stacks (decision 11).
 
+### 2026-11-23 — Submit scores with plausibility check and rate limit
+
+- **Tool / model:** Claude Code, claude-opus-5-5.
+- **Issue / PR:** #27.
+- **Prompt (paraphrase):** implement issue #27 through the harness with
+  Clean Architecture, SOLID and the agreed patterns, explaining every commit
+  and how to test it.
+- **Result:** the `ScoreClaim` entity, one plausibility Strategy per variant
+  on a Template Method base, the plausibility limits in api-contracts §5,
+  the submit score use case, a Prisma repository with an advisory lock,
+  `POST /scores` with a per-player throttler guard, and e2e tests for every
+  status code, concurrent submissions and the rate limit.
+- **Team modifications:**
+  - The contract left the plausibility limits TBD (decision 8 still open).
+    The AI asked; the owner chose loose theoretical limits derived from the
+    scoring rules over waiting for decision 8.
+  - The Template Method base and the handling of two concurrent retries of
+    one `sessionId` were added during the build and approved per commit.
+- **Lessons / limitations:**
+  - The limits are maxima, not statistics: they reject impossible scores,
+    not merely unlikely ones. They must be updated if decision 8 changes a
+    formula (only `plausibility-limits.ts` and §5 change).
+  - Prisma's `upsert` cannot target the partial unique indexes of
+    `leaderboard_entries`; the entry is read, then created or updated under
+    the lock.
+  - A replayed `sessionId` returns the current rank, which can differ from
+    the first answer if other players moved meanwhile.
+
 ## 3. Critical evaluation
 
 To be completed at the end of the project.
