@@ -141,8 +141,13 @@ requests.
   `npx prisma migrate status` shows it as failed, and it must be fixed by
   hand and marked with `npx prisma migrate resolve` before the next deploy.
 - **Health check:** `GET /api/v1/health` must answer `200`.
-- **Regions:** Render in Oregon and the Supabase project in West US (Oregon,
-  `us-west-2`), so every query stays in one area.
+- **Regions:** Render in Virginia and the Supabase project in East US (North
+  Virginia, `us-east-1`), so every query stays in one area; of Render's
+  regions, it is the closest to the players in Latin America. Supabase's
+  region cannot be changed after the project is created.
+- **Supabase settings:** the Data API is off (the NestJS API is the only way
+  to the database) and RLS is enabled on new tables as a second lock; Prisma
+  connects as the owner of the tables, so RLS does not block it.
 - **Check after the first deploy:** `render.yaml` trusts one proxy
   (`TRUST_PROXY_HOPS=1`). Register from two networks (for example Wi-Fi and
   mobile data) six times each within a minute: each network must get its own
