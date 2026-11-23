@@ -152,6 +152,13 @@ override them.
 | [`aaa-test`](./.claude/skills/aaa-test/SKILL.md) | Proposing or writing any test |
 | [`api-endpoint`](./.claude/skills/api-endpoint/SKILL.md) | Implementing or changing an endpoint |
 | [`log-ai-usage`](./.claude/skills/log-ai-usage/SKILL.md) | Gate 4, before opening the pull request |
+| [`change-scenarios`](./.claude/skills/change-scenarios/SKILL.md) | Gate 1 ("Change scenarios" section) and reviewing a pull request |
 
-`harness-task`, `aaa-test` and `log-ai-usage` are shared with the client
-repository: whoever changes one updates the other copy the same day.
+`harness-task`, `aaa-test`, `log-ai-usage` and `change-scenarios` are shared
+with the client repository: whoever changes one updates the other copy the
+same day.
+
+Claude Code also has a read-only subagent,
+[`change-scenarios`](./.claude/agents/change-scenarios.md), that runs that
+skill on a plan or a diff with fresh eyes. Other agents read the skill and
+apply it themselves.

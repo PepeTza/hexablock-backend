@@ -335,10 +335,12 @@ it from the PR description:
 - `harness/README.md`, `harness/checklists.md`, `harness/task-template.md`
 - `.github/pull_request_template.md`
 - `.editorconfig`
-- `.claude/skills/harness-task`, `aaa-test` and `log-ai-usage`
+- `.claude/skills/harness-task`, `aaa-test`, `log-ai-usage` and
+  `change-scenarios`
+- `.claude/agents/change-scenarios.md`
 
 Quick check before opening the PR, from the client repository:
 
 ```bash
-for f in CONTRIBUTING.md harness/README.md harness/checklists.md harness/task-template.md .github/pull_request_template.md .editorconfig; do diff -q "$f" "../hexablock-backend/$f"; done
+for f in CONTRIBUTING.md harness/README.md harness/checklists.md harness/task-template.md .github/pull_request_template.md .editorconfig .claude/skills/change-scenarios/SKILL.md .claude/agents/change-scenarios.md; do diff -q "$f" "../hexablock-backend/$f"; done
 ```
