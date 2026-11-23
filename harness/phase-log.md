@@ -21,3 +21,4 @@ details live in the PR.
 | 2026-11-23 | Get and merge player progress | #26 | KeneFu | 114/114 unit, 41/41 e2e | Merge rule in the `PlayerProgress` entity (RN-36); new `invalid` error kind (400); advisory lock per user and game against concurrent syncs; a retry writes nothing and keeps `updatedAt` |
 | 2026-11-23 | Define the Hexa Sort level spec v1 | #32 | KeneFu | — | Docs only; radius 2, one-stack tray and whole-stack removal aligned with the project statement; Hexa Fit spec left to its owner |
 | 2026-11-23 | Submit scores with plausibility check and rate limit | #27 | KeneFu | 144/144 unit, 52/52 e2e | One plausibility Strategy per variant (Template Method base) with loose limits from the scoring rules; 30/min per player; advisory lock per player and table; sessionId retries answer 200 |
+| 2026-11-23 | Draft Hexa Fit level spec v1 | #32 | jesusobando32 | — | Fit example checked against D-07 catalog; Fit contract approval pending |

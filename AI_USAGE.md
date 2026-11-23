@@ -305,6 +305,18 @@ One entry per significant use. Copy the template.
     the lock.
   - A replayed `sessionId` returns the current rank, which can differ from
     the first answer if other players moved meanwhile.
+### 2026-11-23 — Hexa Fit level format proposal
+
+- **Tool / model:** Codex.
+- **Issue / PR:** #32.
+- **Prompt:** Advance Track B tasks in plan order, including the Hexa Fit
+  part of the level specification.
+- **Result:** Drafted schema version 1 with axial figure cells, catalog
+  shape IDs and the two score thresholds. Checked the example against the
+  client catalog.
+- **Team modifications:** Kenneth integrated the Sort spec. Fit contract review is pending.
+- **Lessons / limitations:** The example demonstrates an exact cover.
+  Format and playability validation are separate responsibilities.
 
 ## 3. Critical evaluation
 
