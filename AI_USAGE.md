@@ -313,3 +313,20 @@ To be completed at the end of the project.
 - **Approximate percentage of AI-assisted code:**
 - **Cases where the AI was wrong or suboptimal, and how they were detected:**
 - **Impact on productivity and quality:**
+
+### 2026-11-23 — Change scenarios in plans and reviews (issue #48)
+
+- **Tool / model:** Claude Code (claude-opus-5-5).
+- **Issue / PR:** #48, twin of PepeTza/hexablock-client#162.
+- **Prompt (paraphrase):** apply in this repository the same change as the
+  client: the design-for-change rule, the shared `change-scenarios` skill and
+  subagent, and the "Change scenarios" section of the gate 1 plan.
+- **Result:** the shared files (`CONTRIBUTING.md`, `harness/*`, the
+  `harness-task` and `change-scenarios` skills, the subagent) copied from the
+  client commits, and the same edits applied by hand to this repository's
+  `AGENTS.md`. The full entry, with the team's decisions, is in the client's
+  `AI_USAGE.md`.
+- **Team modifications:** none beyond those recorded in the client entry.
+- **Lessons / limitations:** the skill was tried on this repository's PR #43,
+  where it found the 19-cell plausibility limits and the hand-copied Hexa Fit
+  maximum (`FIT_MAX_SCORE = 1000`); both are tracked in #47.
