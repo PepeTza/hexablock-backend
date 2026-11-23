@@ -370,11 +370,32 @@ order (RN-37).
 | `spec` | Variant-specific content |
 | `publishedAt` | Set by the server |
 
-#### `spec` for `hexa-fit` — **TBD**
+#### `spec` for `hexa-fit` — schema version 1 (proposed)
 
-Will contain: the target figure (set of cells), the pieces from the catalog
-(D-07) and the score thresholds for 1, 2 and 3 stars. Defined after the Hexa
-Fit class diagram.
+```json
+{
+  "figure": [
+    { "q": 0, "r": 0 },
+    { "q": 1, "r": -1 },
+    { "q": -1, "r": 0 }
+  ],
+  "pieces": ["p3-01"],
+  "starThresholds": { "twoStars": 600, "threeStars": 850 }
+}
+```
+
+| Field | Format and meaning |
+|---|---|
+| `figure` | Non-empty array of distinct axial hex coordinates. Each cell has integer `q` and `r`. The coordinate orientation follows D-21. |
+| `pieces` | Non-empty array of catalog shape IDs from D-07. Each occurrence supplies one distinct piece, so a shape ID can occur more than once. The initial tray order follows the array. |
+| `starThresholds.twoStars` | Positive integer score at which a completed level earns at least two stars, inclusive. |
+| `starThresholds.threeStars` | Positive integer score strictly above `twoStars` at which a completed level earns three stars, inclusive. |
+
+A completed level always earns at least one star (RN-18). The server checks
+structure and field constraints. The panel and app resolve the shape IDs
+against the catalog and check connectivity, equal area and at least one
+solution (RN-13). The example's figure matches the base orientation of
+`p3-01`. A Hexa Fit level has no seed configuration.
 
 #### `spec` for `hexa-sort` — **TBD**
 
@@ -508,7 +529,7 @@ Response `503` if the database does not respond:
 
 | Item | Depends on |
 |---|---|
-| `spec` schema for `hexa-fit` | Hexa Fit class diagram, piece catalog (D-07) |
+| Approve the proposed `hexa-fit` spec v1 | Backend #32 contract review; check against D-07 and RN-13/RN-18 |
 | `spec` schema for `hexa-sort` | Hexa Sort class diagram |
 | Plausibility thresholds per variant for `POST /scores` | Scoring spec (RN-10, D-08) |
 | Final rate-limit values | Team decision |

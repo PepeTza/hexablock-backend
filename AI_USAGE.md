@@ -223,6 +223,19 @@ One entry per significant use. Copy the template.
     the access token itself, as the contract defines), and `trust proxy` when
     deploying behind a proxy (#20).
 
+### 2026-11-23 — Hexa Fit level format proposal
+
+- **Tool / model:** Codex.
+- **Issue / PR:** #32.
+- **Prompt:** Advance Track B tasks in plan order, including the Hexa Fit
+  part of the level specification.
+- **Result:** Drafted schema version 1 with axial figure cells, catalog
+  shape IDs and the two score thresholds. Checked the example against the
+  client catalog.
+- **Team modifications:** Contract review and the Sort fields are pending.
+- **Lessons / limitations:** The example demonstrates an exact cover.
+  Format and playability validation are separate responsibilities.
+
 ## 3. Critical evaluation
 
 To be completed at the end of the project.
