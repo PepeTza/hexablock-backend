@@ -258,7 +258,10 @@ These are integrity constraints (no duplicated rows), not business rules.
 ## 7. Environments and migrations
 
 - **Production:** Supabase PostgreSQL. The connection string comes from the
-  `DATABASE_URL` environment variable; never committed (RNF-10).
+  `DATABASE_URL` environment variable; never committed (RNF-10). It is the
+  **session pooler** string (port 5432): the direct connection is IPv6 only,
+  Render has no outbound IPv6, and the transaction pooler (port 6543) cannot
+  run migrations (README → Deployment).
 - **Local development and tests:** a disposable PostgreSQL (e.g. Docker); tests
   never touch Supabase.
 - **Migrations:** created with Prisma (`prisma migrate dev`) and committed;
