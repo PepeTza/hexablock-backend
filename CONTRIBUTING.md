@@ -190,6 +190,11 @@ approval, so a PR never waits for a teammate who is not available.
   is met, without waiting for the review.
 - The reviewer checks behaviour **and** design: layer rule, patterns used as
   documented, no logic in the UI, tests that test something real.
+- The reviewer also asks "what if tomorrow they ask for this?": they write at
+  least one scenario of their own first, then run the
+  [`change-scenarios`](./.claude/skills/change-scenarios/SKILL.md) skill on the
+  diff as a second opinion, and report any value that should be data instead
+  of a constant.
 - The reviewer must be able to explain the change. If they cannot, they ask
   before approving.
 - Teammates can also review after the merge, by commenting on the closed PR.
@@ -236,6 +241,15 @@ belong to. Do not squash other people's commits.
 - Respect the dependency rule of [`docs/architecture.md`](./docs/architecture.md):
   domain code imports nothing from use cases, adapters or frameworks.
 - No business rules in UI components or controllers.
+- **Design for change.** Never assume a requirement will not change: a client
+  (or the teacher) may change one in the last days before a delivery. Values
+  that come from the game rules or the statement (board size and shape,
+  limits, counts, formulas) are data: a level spec, configuration, or a
+  parameter with a default. They are not constants repeated across files. When
+  a constant is unavoidable, it lives in one named place and everything that
+  depends on it is derived from it, so changing it never fails silently. The
+  [`change-scenarios`](./.claude/skills/change-scenarios/SKILL.md) skill says
+  which changes to expect.
 
 ---
 
