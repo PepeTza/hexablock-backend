@@ -52,7 +52,9 @@ export class PrismaProgressRepository implements IProgressRepository {
    * One transaction holding a lock named after the user and game: a second
    * sync of the same pair waits for the first to commit, then merges on top
    * of it, so no best result is lost. A row lock (`FOR UPDATE`) would not
-   * do, because the first sync has no row to lock yet.
+   * do, because the first sync has no row to lock yet. Source: PostgreSQL
+   * documentation, "Explicit Locking", section "Advisory Locks":
+   * https://www.postgresql.org/docs/current/explicit-locking.html#ADVISORY-LOCKS
    */
   save(
     userId: string,

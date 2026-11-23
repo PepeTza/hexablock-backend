@@ -223,6 +223,36 @@ One entry per significant use. Copy the template.
     the access token itself, as the contract defines), and `trust proxy` when
     deploying behind a proxy (#20).
 
+### 2026-11-23 — Get and merge player progress
+
+- **Tool / model:** Claude Code, claude-opus-5-5.
+- **Issue / PR:** #26.
+- **Prompt (paraphrase):** implement issue #26 through the harness with
+  Clean Architecture, SOLID and the agreed patterns, explaining every commit
+  and how to test it by hand.
+- **Result:** the `GameId` values and the `PlayerProgress` entity with its
+  merge rule, the progress and level repository ports, the get and sync use
+  cases, Prisma repositories with an advisory lock, `GET` and
+  `PUT /progress` with DTOs and a `gameId` pipe, and e2e tests for every
+  status code and for concurrent syncs.
+- **Team modifications:**
+  - The owner approved three decisions the contract left open: reject
+    (`400`) levels in endless games, a non-zero `bestScore` in level games
+    and Hexa Fit levels without stars; a new `invalid` error kind for the
+    contract's business `400`s; and an advisory lock against concurrent
+    syncs.
+  - The owner checked the lock by hand: without it, concurrent syncs lost
+    the best score in two of three runs.
+- **Lessons / limitations:**
+  - Adding the `invalid` kind breaks compilation until the HTTP adapter
+    maps it, so the mapping moved from the third to the second commit.
+  - A row lock (`FOR UPDATE`) cannot protect the first sync, which has no
+    row yet; an advisory lock can.
+  - The AI expected the validation issue `uUID`; class-validator names the
+    rule `isUuid`, so the issue is `uuid`. The e2e run caught it.
+  - A long shell command with several heredocs failed as a whole and wrote
+    nothing; the files were then written one by one.
+
 ## 3. Critical evaluation
 
 To be completed at the end of the project.
