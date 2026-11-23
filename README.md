@@ -135,6 +135,7 @@ their code. Each one is also cited in a comment in the file that uses it.
 | OWASP, [Password Storage Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html) | bcrypt work factor of at least 10 (we use 12) and its 72-byte input limit | `src/adapters/security/bcrypt-password-hasher.ts` |
 | OWASP, [Authentication Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Authentication_Cheat_Sheet.html) | One generic login error and equal response time, so usernames cannot be enumerated | `src/application/use-cases/login.use-case.ts` |
 | IETF, [RFC 7518 §3.2](https://www.rfc-editor.org/rfc/rfc7518#section-3.2) | HS256 keys of at least 256 bits (`JWT_SECRET` of 32+ characters) | `src/frameworks/config/environment.ts` |
+| PostgreSQL docs, [Advisory Locks](https://www.postgresql.org/docs/current/explicit-locking.html#ADVISORY-LOCKS) | A transaction-level lock per user and game, so concurrent progress syncs never lose a best result | `src/adapters/persistence/prisma-progress-repository.ts` |
 
 ## Contributing
 
