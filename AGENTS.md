@@ -61,8 +61,8 @@ Every task follows [`harness/`](./harness/README.md). In short:
 
 1. **Plan first.** Before writing code, read the relevant docs and files,
    then answer with the current state, the plan file by file, the design and
-   any new concepts explained, the test cases, what is out of scope and your
-   confidence. **Stop and wait for approval.**
+   any new concepts explained, the test cases, what is out of scope, the
+   change scenarios and your confidence. **Stop and wait for approval.**
 2. **Build** only what was approved. If the plan has to change, stop and ask.
 3. **Commit** only after the human approves the diff and the message.
    Current mode: **approval per commit**. The team may later switch to

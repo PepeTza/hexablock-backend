@@ -27,7 +27,8 @@ Details for each gate are in [`checklists.md`](./checklists.md).
 5. The agent runs the done checklist (gate 4), adds a row to
    [`phase-log.md`](./phase-log.md) and an entry to `AI_USAGE.md` if the AI
    use was significant.
-6. Open the PR. The reviewer uses the same checklist.
+6. Open the PR. The reviewer uses the same checklist and the
+   `change-scenarios` skill (their own scenario first).
 
 ## Files
 
