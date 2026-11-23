@@ -9,6 +9,11 @@ export interface Environment {
   readonly nodeEnv: NodeEnv;
   /** Signs and verifies the JWTs (RNF-10); never committed. */
   readonly jwtSecret: string;
+  /**
+   * Proxies in front of the API whose X-Forwarded-For entries are trusted.
+   * `0` (the default) trusts none; Render sets `1` (D-10).
+   */
+  readonly trustProxyHops: number;
 }
 
 const DEFAULT_PORT = 3000;
@@ -17,6 +22,9 @@ const POSTGRES_PROTOCOLS = ['postgresql:', 'postgres:'];
 // 32 characters give HS256 a key of at least 256 bits. Source: IETF, RFC 7518
 // "JSON Web Algorithms", §3.2: https://www.rfc-editor.org/rfc/rfc7518#section-3.2
 const MIN_JWT_SECRET_LENGTH = 32;
+// Render needs 1 hop (D-10). The cap is not a platform limit: it rejects a
+// typo that would trust hops a client can fake.
+const MAX_TRUST_PROXY_HOPS = 5;
 
 /**
  * Turns the raw environment variables into a typed `Environment`.
@@ -32,11 +40,30 @@ export function validateEnvironment(
   const port = readPort(variables.PORT, problems);
   const nodeEnv = readNodeEnv(variables.NODE_ENV, problems);
   const jwtSecret = readJwtSecret(variables.JWT_SECRET, problems);
+  const trustProxyHops = readTrustProxyHops(
+    variables.TRUST_PROXY_HOPS,
+    problems,
+  );
 
   if (problems.length > 0) {
     throw new Error(`Invalid environment: ${problems.join('; ')}`);
   }
-  return { databaseUrl, port, nodeEnv, jwtSecret };
+  return { databaseUrl, port, nodeEnv, jwtSecret, trustProxyHops };
+}
+
+function readTrustProxyHops(value: unknown, problems: string[]): number {
+  if (value === undefined || value === '') {
+    return 0;
+  }
+  // Only plain digits: Number() alone would accept ' ', '1.0' or '0x1'.
+  const hops =
+    typeof value === 'string' && /^\d+$/.test(value) ? Number(value) : NaN;
+  if (Number.isNaN(hops) || hops > MAX_TRUST_PROXY_HOPS) {
+    problems.push(
+      `TRUST_PROXY_HOPS must be an integer between 0 and ${MAX_TRUST_PROXY_HOPS}`,
+    );
+  }
+  return hops;
 }
 
 function readJwtSecret(value: unknown, problems: string[]): string {

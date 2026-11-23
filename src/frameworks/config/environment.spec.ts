@@ -24,7 +24,52 @@ describe('validateEnvironment', () => {
       port: 8080,
       nodeEnv: 'development',
       jwtSecret: VALID_JWT_SECRET,
+      trustProxyHops: 0,
     });
+  });
+
+  it('should_trust_no_proxy_when_trust_proxy_hops_is_not_set', () => {
+    // Act
+    const environment = validateEnvironment({ ...REQUIRED });
+
+    // Assert
+    expect(environment.trustProxyHops).toBe(0);
+  });
+
+  it('should_read_trust_proxy_hops_when_it_is_set', () => {
+    // Act
+    const environment = validateEnvironment({
+      ...REQUIRED,
+      TRUST_PROXY_HOPS: '1',
+    });
+
+    // Assert
+    expect(environment.trustProxyHops).toBe(1);
+  });
+
+  it.each(['true', ' ', '-1', '6', '1.5', '1.0', '0x1', ' 1 '])(
+    'should_throw_when_trust_proxy_hops_is_%j',
+    (value) => {
+      // Act
+      const act = () =>
+        validateEnvironment({ ...REQUIRED, TRUST_PROXY_HOPS: value });
+
+      // Assert
+      expect(act).toThrow(
+        'TRUST_PROXY_HOPS must be an integer between 0 and 5',
+      );
+    },
+  );
+
+  it('should_accept_the_largest_allowed_trust_proxy_hops', () => {
+    // Act
+    const environment = validateEnvironment({
+      ...REQUIRED,
+      TRUST_PROXY_HOPS: '5',
+    });
+
+    // Assert
+    expect(environment.trustProxyHops).toBe(5);
   });
 
   it('should_throw_naming_the_variable_when_database_url_is_missing', () => {

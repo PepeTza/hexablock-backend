@@ -1,6 +1,7 @@
 import type { NestExpressApplication } from '@nestjs/platform-express';
 import request from 'supertest';
 
+import { AUTH_RATE_LIMIT } from '../src/adapters/http/auth/auth-rate-limit';
 import { PrismaService } from '../src/frameworks/prisma/prisma.service';
 import { createTestApp } from './create-test-app';
 
@@ -237,6 +238,66 @@ describe('Auth (e2e)', () => {
     // Assert
     expect(response.status).toBe(429);
     expect(Number(response.headers['retry-after'])).toBeGreaterThan(0);
+  });
+
+  describe('behind a proxy', () => {
+    const invalid = { username: 'ab', password: 'short' };
+
+    /** Replaces the app with one that trusts `hops` proxies, as Render. */
+    async function trustProxies(hops: number): Promise<void> {
+      await app?.close();
+      app = await createTestApp({ trustProxyHops: hops });
+    }
+
+    /** A register attempt whose X-Forwarded-For header is `forwardedFor`. */
+    function registerVia(forwardedFor: string): request.Test {
+      return post('register', invalid).set('X-Forwarded-For', forwardedFor);
+    }
+
+    /** Uses up the register limit (decision 21) with `forwardedFor`. */
+    async function exhaustLimit(forwardedFor: (n: number) => string) {
+      for (let attempt = 1; attempt <= AUTH_RATE_LIMIT.limit; attempt++) {
+        await registerVia(forwardedFor(attempt)).expect(400);
+      }
+    }
+
+    it('should_count_register_limits_per_client_ip_behind_a_proxy', async () => {
+      // Arrange: the proxy appends each client's IP.
+      await trustProxies(1);
+      await exhaustLimit(() => '203.0.113.10');
+
+      // Act
+      const sameClient = await registerVia('203.0.113.10');
+      const otherClient = await registerVia('203.0.113.20');
+
+      // Assert: only the first client is limited.
+      expect(sameClient.status).toBe(429);
+      expect(otherClient.status).toBe(400);
+    });
+
+    it('should_count_the_proxy_added_address_when_a_client_prepends_a_fake_one', async () => {
+      // Arrange: the client writes a new fake IP each time; the proxy still
+      // appends the real one last.
+      await trustProxies(1);
+      await exhaustLimit((n) => `198.51.100.${n}, 203.0.113.10`);
+
+      // Act
+      const response = await registerVia('198.51.100.99, 203.0.113.10');
+
+      // Assert: counted against the real IP, so the fake ones do not help.
+      expect(response.status).toBe(429);
+    });
+
+    it('should_ignore_x_forwarded_for_when_no_proxy_is_trusted', async () => {
+      // Arrange: the default app trusts no proxy; a client fakes its IP.
+      await exhaustLimit((n) => `198.51.100.${n}`);
+
+      // Act
+      const response = await registerVia('198.51.100.99');
+
+      // Assert: every attempt counted against the real connection.
+      expect(response.status).toBe(429);
+    });
   });
 
   it('should_return_401_when_refreshing_without_a_token', async () => {
