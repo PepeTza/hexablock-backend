@@ -172,6 +172,9 @@ their code. Each one is also cited in a comment in the file that uses it.
 | OWASP, [Authentication Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Authentication_Cheat_Sheet.html) | One generic login error and equal response time, so usernames cannot be enumerated | `src/application/use-cases/login.use-case.ts` |
 | IETF, [RFC 7518 §3.2](https://www.rfc-editor.org/rfc/rfc7518#section-3.2) | HS256 keys of at least 256 bits (`JWT_SECRET` of 32+ characters) | `src/frameworks/config/environment.ts` |
 | PostgreSQL docs, [Advisory Locks](https://www.postgresql.org/docs/current/explicit-locking.html#ADVISORY-LOCKS) | A transaction-level lock per user and game, so concurrent progress syncs never lose a best result | `src/adapters/persistence/prisma-progress-repository.ts` |
+| Express docs, [Express behind proxies](https://expressjs.com/en/guide/behind-proxies.html) | Trust exactly the number of proxy hops in front of the API, so `req.ip` is the client and cannot be faked | `src/frameworks/configure-app.ts` |
+| Render docs, [Blueprint YAML Reference](https://render.com/docs/blueprint-spec) | `autoDeployTrigger: checksPass`, `healthCheckPath`, `generateValue` and `sync: false` | `render.yaml` |
+| Supabase docs, [IPv4 and IPv6 compatibility](https://supabase.com/docs/guides/troubleshooting/supabase--your-network-ipv4-and-ipv6-compatibility-cHe3BP) | The direct connection is IPv6 only; the session pooler is IPv4 and runs migrations | README → Deployment, `docs/data-model.md` §7 |
 
 ## Contributing
 
