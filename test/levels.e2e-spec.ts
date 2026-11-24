@@ -228,4 +228,60 @@ describe('Levels (e2e)', () => {
     const first = orders[0] ?? 0;
     expect(orders).toEqual([first, first + 1, first + 2, first + 3, first + 4]);
   });
+
+  it('should_list_the_levels_after_an_order_sorted_without_a_token', async () => {
+    // Arrange: three levels published in a row get consecutive orders.
+    const admin = await registerAdmin();
+    const published: LevelBody[] = [];
+    for (let i = 0; i < 3; i++) {
+      const response = await publish(admin, 'hexa-sort', validBody);
+      published.push(response.body as LevelBody);
+    }
+    const first = published[0]?.order ?? 0;
+
+    // Act
+    const response = await request(server()).get(
+      `/api/v1/levels/hexa-sort?after=${first}`,
+    );
+
+    // Assert
+    expect(response.status).toBe(200);
+    const { levels } = response.body as { levels: LevelBody[] };
+    expect(levels.map((found) => found.id)).toEqual(
+      published.slice(1).map((level) => level.id),
+    );
+    expect(levels[0]).toEqual(published[1]);
+  });
+
+  it('should_return_every_level_when_after_is_missing', async () => {
+    // Arrange
+    const admin = await registerAdmin();
+    const created = await publish(admin, 'hexa-sort', validBody);
+
+    // Act
+    const response = await request(server()).get('/api/v1/levels/hexa-sort');
+
+    // Assert
+    expect(response.status).toBe(200);
+    const { levels } = response.body as { levels: LevelBody[] };
+    expect(levels.map((found) => found.id)).toContain(
+      (created.body as LevelBody).id,
+    );
+    const orders = levels.map((found) => found.order);
+    expect(orders).toEqual([...orders].sort((a, b) => a - b));
+  });
+
+  it.each([
+    ['a decimal after', '/api/v1/levels/hexa-sort?after=1.5'],
+    ['a text after', '/api/v1/levels/hexa-sort?after=abc'],
+    ['a negative after', '/api/v1/levels/hexa-sort?after=-1'],
+    ['an endless game', '/api/v1/levels/hexa-merge'],
+    ['an unknown game', '/api/v1/levels/tetris'],
+  ])('should_return_400_when_listing_with_%s', async (_case, url) => {
+    // Act
+    const response = await request(server()).get(url);
+
+    // Assert
+    expect(response.status).toBe(400);
+  });
 });

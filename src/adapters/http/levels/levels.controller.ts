@@ -1,9 +1,19 @@
-import { Body, Controller, Param, Post, Req, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Query,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
   ApiCreatedResponse,
   ApiForbiddenResponse,
+  ApiOkResponse,
   ApiParam,
   ApiTags,
   ApiUnauthorizedResponse,
@@ -12,6 +22,7 @@ import {
 
 import { ApplicationError } from '../../../application/errors/application-error';
 import { INVALID_TOKEN_MESSAGE } from '../../../application/errors/auth-messages';
+import { ListLevelsUseCase } from '../../../application/use-cases/list-levels.use-case';
 import { PublishLevelUseCase } from '../../../application/use-cases/publish-level.use-case';
 import { GAME_IDS, type GameId } from '../../../domain/game/game-id';
 import {
@@ -24,6 +35,8 @@ import { ErrorResponseDto } from '../errors/error-response.dto';
 import { ParseGameIdPipe } from '../progress/parse-game-id.pipe';
 import {
   LevelDefinitionResponse,
+  LevelListResponse,
+  ListLevelsQuery,
   PublishLevelRequest,
   toLevelDefinitionResponse,
   toSeedConfig,
@@ -33,7 +46,26 @@ import {
 @ApiTags('levels')
 @Controller('levels')
 export class LevelsController {
-  constructor(private readonly publishLevel: PublishLevelUseCase) {}
+  constructor(
+    private readonly listLevels: ListLevelsUseCase,
+    private readonly publishLevel: PublishLevelUseCase,
+  ) {}
+
+  /** CU-15: public; the levels after the last `order` the device has. */
+  @Get(':gameId')
+  @ApiParam({ name: 'gameId', enum: GAME_IDS })
+  @ApiOkResponse({ type: LevelListResponse })
+  @ApiBadRequestResponse({
+    type: ErrorResponseDto,
+    description: 'A game without levels or an invalid after',
+  })
+  async list(
+    @Param('gameId', ParseGameIdPipe) gameId: GameId,
+    @Query() query: ListLevelsQuery,
+  ): Promise<LevelListResponse> {
+    const levels = await this.listLevels.execute(gameId, query.after);
+    return { levels: levels.map(toLevelDefinitionResponse) };
+  }
 
   /** CU-17: an admin appends a level at the end of the game's order. */
   @Post(':gameId')

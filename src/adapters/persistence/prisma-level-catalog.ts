@@ -5,10 +5,11 @@ import type {
   NewLevel,
   PublishedLevel,
 } from '../../application/ports/level-catalog';
+import type { GameId } from '../../domain/game/game-id';
 import { fromGameIdColumn, toGameIdColumn } from './game-id-column';
 
 /** The only part of Prisma the catalog needs. */
-export type LevelCatalogClient = Pick<PrismaClient, '$transaction'>;
+export type LevelCatalogClient = Pick<PrismaClient, '$transaction' | 'level'>;
 
 type CatalogTransaction = Pick<
   Prisma.TransactionClient,
@@ -62,6 +63,15 @@ export class PrismaLevelCatalog implements ILevelCatalog {
       }
       return toPublishedLevel(row);
     });
+  }
+
+  /** Served by the unique `(game_id, order)` index (data-model §6). */
+  async listAfter(gameId: GameId, after: number): Promise<PublishedLevel[]> {
+    const rows = await this.client.level.findMany({
+      where: { gameId: toGameIdColumn(gameId), order: { gt: after } },
+      orderBy: { order: 'asc' },
+    });
+    return rows.map(toPublishedLevel);
   }
 }
 
