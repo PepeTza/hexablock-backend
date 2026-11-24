@@ -412,22 +412,22 @@ Fit class diagram.
 | Field | Type and range | Description |
 |---|---|---|
 | `radius` | integer, always `2` in v1 | The board is the hexagon of radius 2 around `(0, 0)`: 19 cells, as the project statement requires. Another size needs a new `schemaVersion` |
-| `blocked` | array of `{ q, r }` | Cells that can never hold a stack. May be empty |
+| `blocked` | array of `{ q, r }`, both integers | Cells that can never hold a stack. May be empty |
 | `initialStacks` | array of `{ cell, chips }` | Stacks already on the board when the level starts. May be empty |
-| `initialStacks[].cell` | `{ q, r }` | Where the stack is |
-| `initialStacks[].chips` | array of 1–9 integers | The colors of the chips, **from bottom to top** |
+| `initialStacks[].cell` | `{ q, r }`, both integers | Where the stack is |
+| `initialStacks[].chips` | array of 1–9 integers, each from `0` to `colors - 1` | The colors of the chips, **from bottom to top** |
 | `colors` | integer, 2–8 | Number of colors in the level. A chip is a color index from `0` to `colors - 1`; the client chooses the palette |
 | `tray.size` | integer, always `1` in v1 | Stacks the tray offers at a time: one, as the statement and RN-20 say |
 | `tray.minHeight`, `tray.maxHeight` | integers, 1–9, `minHeight ≤ maxHeight` | Height range of the stacks generated with the seed |
-| `tray.maxColorsPerStack` | integer, 1 to `colors` | Most different colors a generated stack can have |
-| `goals` | integer, 1–99 | Stacks removed (10 chips of one color) needed to win (RN-24) |
+| `tray.maxColorsPerStack` | integer, 1 to `colors` | Most different colors a generated stack can have. An upper bound, so it may exceed `maxHeight`: a stack of height 2 never has more than 2 colors |
+| `goals` | integer, 1–99 | Stacks removed (10 or more chips of one color) needed to win (RN-24) |
 
 Cells use the axial coordinates `q, r` of the client engine (`HexCoord`). A
 cell is on the board when `max(|q|, |r|, |q + r|) ≤ radius`. Source: Red
 Blob Games, "Hexagonal Grids", sections "Axial coordinates" and "Distances"
 (https://www.redblobgames.com/grids/hexagons/).
 
-When a stack gathers 10 chips of the same color, the **whole stack** is
+When a stack gathers 10 or more chips of the same color, the **whole stack** is
 removed from the board and counts as one goal, as the project statement says.
 Stacks start with at most 9 chips, so no stack can start already complete.
 Colors are indexes, not names or codes, so the client can change its palette
@@ -438,7 +438,7 @@ with `422` when:
 
 1. a cell of `blocked` or `initialStacks` is outside the board;
 2. a cell appears twice, inside one list or across both;
-3. a chip is not a color index lower than `colors`;
+3. a chip is not an integer from `0` to `colors - 1`;
 4. no free cell is left to place a stack.
 
 The server does **not** check whether the level can be won: the admin panel
@@ -482,9 +482,15 @@ Response `201`: the created `LevelDefinition`.
 
 Errors:
 
-- `400` malformed body.
+- `400` the request envelope is wrong: malformed JSON, a missing
+  `schemaVersion` or `spec`, `seedConfig` missing for `hexa-sort` or present
+  for `hexa-fit`, a `gameId` without levels, or an unknown field outside
+  `spec`. It usually means a bug in the caller.
 - `403` not an admin.
-- `422` the level does not match the schema; `message` says which field.
+- `422` the envelope is right but the level is not: an unknown
+  `schemaVersion`, a wrong type or range inside `spec`, an unknown field
+  inside `spec`, or a rule of the variant (for `hexa-sort`, rules 1-4 above);
+  `message` says which field. The admin panel can show it to the admin.
 
 There is no update or delete endpoint, by design.
 
