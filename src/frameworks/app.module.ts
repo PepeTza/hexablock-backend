@@ -6,6 +6,7 @@ import { AUTH_RATE_LIMIT } from '../adapters/http/auth/auth-rate-limit';
 import { AuthModule } from './auth/auth.module';
 import { validateEnvironment } from './config/environment';
 import { HealthModule } from './health/health.module';
+import { LevelsModule } from './levels/levels.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { ProgressModule } from './progress/progress.module';
 import { ScoresModule } from './scores/scores.module';
@@ -27,6 +28,7 @@ import { ScoresModule } from './scores/scores.module';
     HealthModule,
     AuthModule,
     ProgressModule,
+    LevelsModule,
     ScoresModule,
   ],
 })
