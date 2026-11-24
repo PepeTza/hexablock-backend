@@ -352,6 +352,42 @@ One entry per significant use. Copy the template.
   of the gate 1 plan; only the "Design for change" rule remains. Restoring
   them is a revert of that commit.
 
+### 2026-11-24 — List and publish levels
+
+- **Tool / model:** Claude Code, claude-opus-5-5.
+- **Issue / PR:** #34.
+- **Prompt (paraphrase):** implement issue #34 through the harness with
+  Clean Architecture, SOLID and the agreed patterns, one commit at a time.
+- **Result:** a generic `RolesGuard` with `@Roles()`, the
+  `ILevelSpecValidator` Strategy with a registry and the Hexa Sort v1
+  validator, the `SeedConfig` rule (unsigned 32-bit value), the
+  `ILevelCatalog` port with its Prisma adapter, the publish and list use
+  cases, both endpoints, and unit and e2e tests (including concurrent
+  publishes).
+- **Team modifications:**
+  - The owner made four decisions before the build: Hexa Sort only until
+    the Hexa Fit spec (#60) is approved, the seed value as an unsigned
+    32-bit integer (also fixed in the contract on #63), a branch from `main`
+    merged after #63, and a generic roles guard instead of an admin-only
+    one.
+  - The plan extended `PrismaLevelRepository`; the build used a separate
+    `PrismaLevelCatalog` so the existing port and its tests stay untouched.
+  - A self-review by a separate agent found two inputs that crashed with a
+    500 (`"seedConfig": null`, and an `after` beyond the `int` column) and a
+    broken README table row; all were fixed with e2e cases before the PR.
+    It also led to `schemaVersion: 0` answering 422, as the contract says
+    for an unknown version, instead of 400.
+- **Lessons / limitations:**
+  - A test file passed Jest but failed the typecheck, because ts-jest runs
+    with `isolatedModules`; it was fixed in its own commit. Run
+    `npm run typecheck` after every test change, not only Jest.
+  - The concurrency e2e was checked by removing the advisory lock: the test
+    failed, so it really protects distinct orders.
+  - The validator checks only the format; whether a level can be won stays
+    with the admin panel and the game (D-16).
+  - `plausibility-limits.ts` still repeats Hexa Sort limits (19 cells,
+    9 chips) that now live in `SORT_SPEC_V1`; left for #47.
+
 ## 3. Critical evaluation
 
 To be completed at the end of the project.
