@@ -12,6 +12,7 @@ import type {
 export const SORT_SPEC_V1 = {
   radius: 2,
   minColors: 2,
+  minColorsPerStack: 1,
   maxColors: 8,
   minChips: 1,
   maxChips: 9,
@@ -129,10 +130,14 @@ function checkTray(
     });
   }
   // An upper bound, so it may exceed maxHeight (api-contracts §6).
-  if (colors !== null && !isIntegerIn(value.maxColorsPerStack, 1, colors)) {
+  const { minColorsPerStack } = SORT_SPEC_V1;
+  if (
+    colors !== null &&
+    !isIntegerIn(value.maxColorsPerStack, minColorsPerStack, colors)
+  ) {
     out.push({
       field: 'spec.tray.maxColorsPerStack',
-      issue: `must be an integer from 1 to colors (${colors})`,
+      issue: `must be an integer from ${minColorsPerStack} to colors (${colors})`,
     });
   }
 }
