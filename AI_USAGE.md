@@ -331,6 +331,20 @@ One entry per significant use. Copy the template.
     the double quotes of a JSON argument passed to `curl.exe`; the body was
     sent from a file instead.
 
+### 2026-11-23 — Hexa Fit level format proposal
+
+- **Tool / model:** Codex.
+- **Issue / PR:** #32 (Fit review from #45).
+- **Prompt:** Document the Fit schema and make the server format checks
+  explicit after review.
+- **Result:** Drafted version 1, listed each validation error and clarified
+  the outer request versus level spec boundary for HTTP 400 and 422.
+- **Team modifications:** PepeTza requested explicit error conditions.
+  Kenneth's Hexa Sort schema is already in main.
+- **Lessons / limitations:** The example uses a catalog shape that covers
+  the figure. The contract separates shape ID syntax from catalog membership
+  and playability. The publication endpoint is tracked separately in #34.
+
 ## 3. Critical evaluation
 
 To be completed at the end of the project.

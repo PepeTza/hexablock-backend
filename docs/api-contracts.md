@@ -390,11 +390,45 @@ order (RN-37).
 A change to the format of a `spec` creates a new `schemaVersion`; published
 levels keep the version they were published with (RN-37).
 
-#### `spec` for `hexa-fit` — **TBD**
+#### `spec` for `hexa-fit` — schema version 1 (proposed)
 
-Will contain: the target figure (set of cells), the pieces from the catalog
-(D-07) and the score thresholds for 1, 2 and 3 stars. Defined after the Hexa
-Fit class diagram.
+```json
+{
+  "figure": [
+    { "q": 0, "r": 0 },
+    { "q": 1, "r": -1 },
+    { "q": -1, "r": 0 }
+  ],
+  "pieces": ["p3-01"],
+  "starThresholds": { "twoStars": 600, "threeStars": 850 }
+}
+```
+
+| Field | Format and meaning |
+|---|---|
+| `figure` | Non-empty array of distinct axial hex coordinates. Each cell has integer `q` and `r`. The coordinate orientation follows D-21. |
+| `pieces` | Non-empty array of catalog shape IDs from D-07. Each occurrence supplies one distinct piece, so a shape ID can occur more than once. The initial tray order follows the array. |
+| `starThresholds.twoStars` | Positive integer score at which a completed level earns at least two stars, inclusive. |
+| `starThresholds.threeStars` | Positive integer score strictly above `twoStars` at which a completed level earns three stars, inclusive. |
+
+A completed level always earns at least one star (RN-18). The server checks
+structure and field constraints. The panel and app resolve the shape IDs
+against the catalog and check connectivity, equal area and at least one
+solution (RN-13). The example's figure matches the base orientation of
+`p3-01`. A Hexa Fit level has no seed configuration.
+
+For Hexa Fit, a `422` response identifies the invalid field when:
+
+1. `spec` is not a JSON object with exactly `figure`, `pieces` and
+   `starThresholds`.
+2. `figure` is empty or is not an array, a cell is not an object with exactly
+   the safe integer fields `q` and `r`, or two cells share the same `(q, r)`.
+3. `pieces` is empty or is not an array, or an entry is not a string in
+   the catalog ID format `^p[1-5]-(0[1-9]|[1-9][0-9])$`. Repeated IDs are
+   allowed. The panel and app check catalog membership.
+4. `starThresholds` is not an object with exactly `twoStars` and
+   `threeStars`, either threshold is not a positive safe integer, or
+   `threeStars` is less than or equal to `twoStars`.
 
 #### `spec` for `hexa-sort` — `schemaVersion` 1
 
@@ -482,9 +516,15 @@ Response `201`: the created `LevelDefinition`.
 
 Errors:
 
-- `400` malformed body.
+- `400` invalid request envelope. This includes an unsupported `gameId`,
+  malformed JSON, a body that is not an object, unknown outer fields,
+  missing `schemaVersion` or `spec`, a non-integer `schemaVersion`, or
+  a missing, invalid or forbidden `seedConfig` for the selected variant.
 - `403` not an admin.
-- `422` the level does not match the schema; `message` says which field.
+- `422` unsupported integer `schemaVersion`, or invalid variant `spec`
+  after the envelope is accepted. This includes an invalid `spec` type
+  (such as `null`), nested unknown fields and rule violations. The error
+  `message` identifies the field.
 
 There is no update or delete endpoint, by design.
 
@@ -571,6 +611,6 @@ Response `503` if the database does not respond:
 
 | Item | Depends on |
 |---|---|
-| `spec` schema for `hexa-fit` | Hexa Fit class diagram, piece catalog (D-07) |
+| Approve the proposed `hexa-fit` spec v1 | Backend #32 contract review; check against D-07 and RN-13/RN-18 |
 | Final rate-limit values | Team decision |
 | Username and password rules | Team decision |
