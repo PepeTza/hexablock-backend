@@ -149,6 +149,9 @@ requests.
   `npx prisma migrate status` shows it as failed, and it must be fixed by
   hand and marked with `npx prisma migrate resolve` before the next deploy.
 - **Health check:** `GET /api/v1/health` must answer `200`.
+- **Shutdown:** before stopping or replacing an instance, Render sends
+  `SIGTERM`; `main.ts` enables Nest's shutdown hooks, so the database pool is
+  closed cleanly instead of being cut.
 - **Regions:** Render in Virginia and the Supabase project in East US (North
   Virginia, `us-east-1`), so every query stays in one area; of Render's
   regions, it is the closest to the players in Latin America. Supabase's

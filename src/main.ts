@@ -14,6 +14,12 @@ async function bootstrap(): Promise<void> {
     config.get('nodeEnv', { infer: true }),
     config.get('trustProxyHops', { infer: true }),
   );
+  // Render sends SIGTERM before it stops or replaces an instance. With the
+  // hooks on, Nest runs `app.close()`, so `PrismaService.onModuleDestroy()`
+  // closes the pool cleanly. Only here, not in `configureApp`, so the e2e
+  // apps do not add signal listeners to Jest's process. Source: NestJS docs,
+  // "Lifecycle events", https://docs.nestjs.com/fundamentals/lifecycle-events
+  app.enableShutdownHooks();
 
   await app.listen(config.get('port', { infer: true }));
 }
