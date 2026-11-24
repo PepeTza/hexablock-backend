@@ -129,6 +129,14 @@ The service is described in [`render.yaml`](./render.yaml), a Render
 Blueprint, so every deployment setting is versioned and reviewed in pull
 requests.
 
+- **Public URL:** https://hexablock-api.onrender.com (health:
+  https://hexablock-api.onrender.com/api/v1/health).
+- **How the service was created:** by hand in Render's dashboard, with the
+  exact values of `render.yaml`, because Render's identity check blocked the
+  Blueprint flow at the time. The dashboard therefore holds the live
+  settings: whoever changes one of them updates `render.yaml` in the same
+  pull request, and the other way round.
+
 - **When it deploys:** after a merge to `main`, once the CI checks of that
   commit pass (`autoDeployTrigger: checksPass`). A red CI never reaches
   production.
@@ -151,7 +159,8 @@ requests.
 - **Check after the first deploy:** `render.yaml` trusts one proxy
   (`TRUST_PROXY_HOPS=1`). Register from two networks (for example Wi-Fi and
   mobile data) six times each within a minute: each network must get its own
-  `429`. If both share one, Render adds more hops than expected.
+  `429`. If both share one, Render adds more hops than expected. **Pending:**
+  not run yet, since no second network was available on the first deploy.
 
 | Variable | Where it comes from |
 |---|---|
