@@ -168,6 +168,12 @@ describe('Levels (e2e)', () => {
       { ...validBody, seedConfig: { mode: 'fixed', value: 4294967296 } },
     ],
     ['an unknown body field', 'hexa-sort', { ...validBody, theme: 'dark' }],
+    ['a null seedConfig', 'hexa-sort', { ...validBody, seedConfig: null }],
+    [
+      'a null seedConfig for hexa-fit',
+      'hexa-fit',
+      { schemaVersion: 1, spec: {}, seedConfig: null },
+    ],
     ['a non-object spec', 'hexa-sort', { ...validBody, spec: [1] }],
   ])('should_return_400_when_the_body_has_%s', async (_case, gameId, body) => {
     // Arrange
@@ -192,6 +198,23 @@ describe('Levels (e2e)', () => {
     expect(response.status).toBe(422);
     expect(response.body).toMatchObject({
       message: 'spec.blocked[0] is outside the board',
+    });
+  });
+
+  it('should_return_422_when_the_schema_version_is_0', async () => {
+    // Arrange
+    const admin = await registerAdmin();
+
+    // Act
+    const response = await publish(admin, 'hexa-sort', {
+      ...validBody,
+      schemaVersion: 0,
+    });
+
+    // Assert
+    expect(response.status).toBe(422);
+    expect(response.body).toMatchObject({
+      message: 'schemaVersion 0 is not supported for this game',
     });
   });
 
@@ -275,6 +298,7 @@ describe('Levels (e2e)', () => {
     ['a decimal after', '/api/v1/levels/hexa-sort?after=1.5'],
     ['a text after', '/api/v1/levels/hexa-sort?after=abc'],
     ['a negative after', '/api/v1/levels/hexa-sort?after=-1'],
+    ['an after beyond an int', '/api/v1/levels/hexa-sort?after=3000000000'],
     ['an endless game', '/api/v1/levels/hexa-merge'],
     ['an unknown game', '/api/v1/levels/tetris'],
   ])('should_return_400_when_listing_with_%s', async (_case, url) => {

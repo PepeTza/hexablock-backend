@@ -5,9 +5,11 @@ import {
   IsInt,
   IsObject,
   IsOptional,
+  Max,
   Min,
   Validate,
   type ValidationArguments,
+  ValidateIf,
   ValidateNested,
   ValidatorConstraint,
   type ValidatorConstraintInterface,
@@ -23,6 +25,9 @@ import {
   type SeedMode,
   seedConfigIssue,
 } from '../../../domain/seed/seed-config';
+
+// Level orders are stored in an `int` column; a bigger `after` is a 400.
+const MAX_ORDER = 2_147_483_647;
 
 /** `fixed` needs a 32-bit `value`; `random` takes none (api-contracts §7). */
 @ValidatorConstraint({ name: 'seedConfig' })
@@ -60,9 +65,11 @@ export class SeedConfigRequest {
  * checked by the game's `ILevelSpecValidator` in the use case (`422`).
  */
 export class PublishLevelRequest {
-  @ApiProperty({ minimum: 1, example: 1 })
+  @ApiProperty({
+    example: 1,
+    description: 'An integer; a version without a validator is a 422',
+  })
   @IsInt()
-  @Min(1)
   readonly schemaVersion!: number;
 
   @ApiProperty({
@@ -78,7 +85,8 @@ export class PublishLevelRequest {
     required: false,
     description: 'Required for hexa-sort, not allowed for hexa-fit',
   })
-  @IsOptional()
+  // Absent is fine; `null` must fail like any other non-object value.
+  @ValidateIf((_body: object, value: unknown) => value !== undefined)
   @Validate(SeedConfigRule)
   @ValidateNested()
   @Type(() => SeedConfigRequest)
@@ -111,6 +119,7 @@ export class ListLevelsQuery {
   @ApiProperty({
     required: false,
     minimum: 0,
+    maximum: MAX_ORDER,
     example: 12,
     description: 'Return only levels with a greater order; all when absent',
   })
@@ -118,6 +127,7 @@ export class ListLevelsQuery {
   @Type(() => Number)
   @IsInt()
   @Min(0)
+  @Max(MAX_ORDER)
   readonly after?: number;
 }
 
