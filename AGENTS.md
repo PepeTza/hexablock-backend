@@ -61,8 +61,8 @@ Every task follows [`harness/`](./harness/README.md). In short:
 
 1. **Plan first.** Before writing code, read the relevant docs and files,
    then answer with the current state, the plan file by file, the design and
-   any new concepts explained, the test cases, what is out of scope, the
-   change scenarios and your confidence. **Stop and wait for approval.**
+   any new concepts explained, the test cases, what is out of scope and your
+   confidence. **Stop and wait for approval.**
 2. **Build** only what was approved. If the plan has to change, stop and ask.
 3. **Commit** only after the human approves the diff and the message.
    Current mode: **approval per commit**. The team may later switch to
@@ -115,8 +115,7 @@ The full rules are in [`CONTRIBUTING.md`](./CONTRIBUTING.md).
   framework, UI, storage or network imports.
 - Design for change (`CONTRIBUTING.md` §4): never assume a requirement will
   not change. Values from the game rules or the statement (board size and
-  shape, limits, counts, formulas) are data, not scattered constants. Check
-  plans and diffs with the `change-scenarios` skill.
+  shape, limits, counts, formulas) are data, not scattered constants.
 - Randomness always goes through an injected, seedable random source, so
   tests are deterministic.
 - Tests: `should_<result>_when_<condition>`, Arrange / Act / Assert. You
@@ -156,13 +155,6 @@ override them.
 | [`aaa-test`](./.claude/skills/aaa-test/SKILL.md) | Proposing or writing any test |
 | [`api-endpoint`](./.claude/skills/api-endpoint/SKILL.md) | Implementing or changing an endpoint |
 | [`log-ai-usage`](./.claude/skills/log-ai-usage/SKILL.md) | Gate 4, before opening the pull request |
-| [`change-scenarios`](./.claude/skills/change-scenarios/SKILL.md) | Gate 1 ("Change scenarios" section) and reviewing a pull request |
 
-`harness-task`, `aaa-test`, `log-ai-usage` and `change-scenarios` are shared
-with the client repository: whoever changes one updates the other copy the
-same day.
-
-Claude Code also has a read-only subagent,
-[`change-scenarios`](./.claude/agents/change-scenarios.md), that runs that
-skill on a plan or a diff with fresh eyes. Other agents read the skill and
-apply it themselves.
+`harness-task`, `aaa-test` and `log-ai-usage` are shared with the client
+repository: whoever changes one updates the other copy the same day.

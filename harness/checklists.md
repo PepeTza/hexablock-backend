@@ -7,8 +7,6 @@
 - [ ] Wrote the current state and the plan in plain language.
 - [ ] Listed the test cases.
 - [ ] Explained the design choices and any new concept.
-- [ ] Listed two or three change scenarios, at least one from the human, and
-      how each is handled (`change-scenarios` skill).
 - [ ] Confidence ≥ 95 %, or questions asked and answered.
 - [ ] **Explicit approval received from the human.**
 

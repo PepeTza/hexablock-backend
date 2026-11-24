@@ -330,3 +330,7 @@ To be completed at the end of the project.
 - **Lessons / limitations:** the skill was tried on this repository's PR #43,
   where it found the 19-cell plausibility limits and the hand-copied Hexa Fit
   maximum (`FIT_MAX_SCORE = 1000`); both are tracked in #47.
+- **Update (same day):** until the teacher approves it, Ronald removed the
+  `change-scenarios` skill, its subagent and the "Change scenarios" section
+  of the gate 1 plan; only the "Design for change" rule remains. Restoring
+  them is a revert of that commit.

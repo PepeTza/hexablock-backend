@@ -190,11 +190,6 @@ approval, so a PR never waits for a teammate who is not available.
   is met, without waiting for the review.
 - The reviewer checks behaviour **and** design: layer rule, patterns used as
   documented, no logic in the UI, tests that test something real.
-- The reviewer also asks "what if tomorrow they ask for this?": they write at
-  least one scenario of their own first, then run the
-  [`change-scenarios`](./.claude/skills/change-scenarios/SKILL.md) skill on the
-  diff as a second opinion, and report any value that should be data instead
-  of a constant.
 - The reviewer must be able to explain the change. If they cannot, they ask
   before approving.
 - Teammates can also review after the merge, by commenting on the closed PR.
@@ -247,9 +242,7 @@ belong to. Do not squash other people's commits.
   limits, counts, formulas) are data: a level spec, configuration, or a
   parameter with a default. They are not constants repeated across files. When
   a constant is unavoidable, it lives in one named place and everything that
-  depends on it is derived from it, so changing it never fails silently. The
-  [`change-scenarios`](./.claude/skills/change-scenarios/SKILL.md) skill says
-  which changes to expect.
+  depends on it is derived from it, so changing it never fails silently.
 
 ---
 
@@ -349,12 +342,10 @@ it from the PR description:
 - `harness/README.md`, `harness/checklists.md`, `harness/task-template.md`
 - `.github/pull_request_template.md`
 - `.editorconfig`
-- `.claude/skills/harness-task`, `aaa-test`, `log-ai-usage` and
-  `change-scenarios`
-- `.claude/agents/change-scenarios.md`
+- `.claude/skills/harness-task`, `aaa-test` and `log-ai-usage`
 
 Quick check before opening the PR, from the client repository:
 
 ```bash
-for f in CONTRIBUTING.md harness/README.md harness/checklists.md harness/task-template.md .github/pull_request_template.md .editorconfig .claude/skills/change-scenarios/SKILL.md .claude/agents/change-scenarios.md; do diff -q "$f" "../hexablock-backend/$f"; done
+for f in CONTRIBUTING.md harness/README.md harness/checklists.md harness/task-template.md .github/pull_request_template.md .editorconfig; do diff -q "$f" "../hexablock-backend/$f"; done
 ```
