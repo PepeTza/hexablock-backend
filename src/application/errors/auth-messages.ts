@@ -10,3 +10,5 @@ export const INVALID_CREDENTIALS_MESSAGE = 'invalid username or password';
 
 /** Every rejected token: expired, tampered with or for a deleted user. */
 export const INVALID_TOKEN_MESSAGE = 'invalid or expired token';
+
+export const INSUFFICIENT_ROLE_MESSAGE = 'insufficient role';
