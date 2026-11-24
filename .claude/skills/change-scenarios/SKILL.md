@@ -59,7 +59,9 @@ catalog, the statement or a "Proposal" rule. Do not list them.
    - how many **existing** files would be edited, and how many new ones added;
    - whether anything would fail **silently** (a value repeated in another
      file, another layer or the other repository).
-4. Give one of three verdicts:
+4. **Recommend** one of three outcomes. The human decides which one is
+   taken; you never decide for them. When more than one outcome is
+   reasonable, name the other one with a one-line pro and con for each.
    - **Already flexible:** only new classes, data or wiring.
    - **Fix now:** cheap, inside the task's scope and easy to explain. It
      goes into the plan, with one line saying why.
@@ -79,11 +81,12 @@ catalog, the statement or a "Proposal" rule. Do not list them.
 ## Output
 
 ```
-| Scenario | What would change | Existing files edited | Silent failure? | Verdict |
+| Scenario | What would change | Existing files edited | Silent failure? | Recommendation |
 |---|---|---|---|---|
-| 3. Board radius 4 for every board | ... | 2 (`...`, `...`) | Yes: ... | Fix now: ... |
+| 3. Board radius 4 for every board | ... | 2 (`...`, `...`) | Yes: ... | Fix now: ... (or Accept and document: pro ..., con ...) |
 ```
 
-In gate 1 this table is the "Change scenarios" section of the plan. In a review, it goes in the
-review comment, and each "Fix now" or "Accept and document" outside the PR's
-scope becomes an issue.
+In gate 1 this table is the "Change scenarios" section of the plan. In a
+review, it goes in the review comment. Once the human has chosen, each "Fix
+now" or "Accept and document" outside the PR's scope becomes a proposed
+issue.

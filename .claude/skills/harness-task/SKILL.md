@@ -37,7 +37,7 @@ Use exactly these sections, in this order:
    each saying what it protects (see the `aaa-test` skill).
 5. **Out of scope:** what you will not touch.
 6. **Change scenarios:** two or three plausible requirement changes that touch
-   the task, with the table and verdicts of the `change-scenarios` skill. Ask
+   the task, with the table and recommendations of the `change-scenarios` skill. Ask
    the human for at least one scenario of their own; in Claude Code, the
    `change-scenarios` subagent can give a second opinion.
 7. **Confidence:** a percentage. Below 95 %, ask your questions instead of

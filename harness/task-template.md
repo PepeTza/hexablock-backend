@@ -25,9 +25,10 @@ Answer with the following and then **stop and wait for approval**:
    (`should_<result>_when_<condition>`).
 5. **Out of scope:** what you will not touch.
 6. **Change scenarios:** two or three plausible requirement changes that
-   touch this task, how much existing code each would edit, and the verdict
-   (already flexible, fix now, or accept and document). The human adds at
-   least one scenario of their own. See the `change-scenarios` skill.
+   touch this task, how much existing code each would edit, and the
+   recommended outcome (already flexible, fix now, or accept and document),
+   which the human decides. The human adds at least one scenario of their
+   own. See the `change-scenarios` skill.
 7. **Confidence:** a percentage. If it is below 95 %, ask your questions
    instead of presenting a plan.
 
