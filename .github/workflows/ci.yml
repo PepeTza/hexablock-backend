@@ -8,9 +8,11 @@ on:
   push:
     branches: [main]
 
-# A new push to the same branch cancels the run that is still going.
+# On a pull request, a new push cancels the run that is still going. On
+# `main` each commit gets its own group, so no run is cancelled or left
+# waiting: Render deploys a commit only after its checks pass.
 concurrency:
-  group: ci-${{ github.ref }}
+  group: ci-${{ github.event_name == 'pull_request' && github.ref || github.sha }}
   cancel-in-progress: true
 
 permissions:
@@ -39,6 +41,9 @@ jobs:
           --health-retries 10
 
     env:
+      # Husky v9 does not skip on `CI=true`; without this, `npm ci` installs
+      # git hooks the runner never uses.
+      HUSKY: '0'
       DATABASE_URL: postgresql://hexablock:hexablock@localhost:5432/hexablock?schema=public
       TEST_DATABASE_URL: postgresql://hexablock:hexablock@localhost:5432/hexablock?schema=public
 
@@ -48,6 +53,9 @@ jobs:
         with:
           # Full history, so commitlint can read every commit of the PR.
           fetch-depth: 0
+          # Do not leave the GitHub token in .git/config for later steps;
+          # nothing here pushes.
+          persist-credentials: false
 
       - name: Set up Node.js
         uses: actions/setup-node@v7
