@@ -44,7 +44,10 @@ describe('SortSpecV1Validator', () => {
 
   it('should_report_missing_and_unknown_fields_when_the_keys_differ', () => {
     // Arrange
-    const spec = { ...contractExample(), theme: 'dark' };
+    const spec: Record<string, unknown> = {
+      ...contractExample(),
+      theme: 'dark',
+    };
     delete spec.goals;
 
     // Act
