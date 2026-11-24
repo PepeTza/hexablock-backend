@@ -511,7 +511,7 @@ started on the device (CU-15 A3).
 | Field | Description |
 |---|---|
 | `mode` | `"fixed"` or `"random"` |
-| `value` | Required when `mode = fixed`, absent when `random`. Unsigned 32-bit integer *(proposed)* |
+| `value` | Required when `mode = fixed`, absent when `random`. Unsigned 32-bit integer (`0` to `4294967295`): the client's seeded random works on 32 bits, so a larger value would silently play another seed |
 
 ### `GET /seed-config/{gameId}` — public (CU-15)
 
