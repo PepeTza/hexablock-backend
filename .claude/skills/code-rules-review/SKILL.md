@@ -9,12 +9,22 @@ Checks the **code rules** of a diff. Structure (layers, ports, generics,
 aspects) belongs to the `architecture-review` skill; the PR as a whole
 belongs to `pr-review`.
 
+## Who runs it
+
+A separate agent with a clean context: in Claude Code, the `code-rules-review`
+subagent; in other tools, a new session. If you are the agent that wrote this
+code, do not run this skill yourself: ask for a separate agent, so the review
+is impartial (`CONTRIBUTING.md` §3).
+
 ## Before you start: human first
 
-The person who asked for the review writes down at least one finding of their
-own first. This skill is a second opinion: whatever it finds that they
-missed, they must understand before it goes into a PR or a review
-(`CONTRIBUTING.md` §3).
+- **In a review of a teammate's PR:** the reviewer writes down at least one
+  finding of their own first. This skill is a second opinion (`CONTRIBUTING.md`
+  §3).
+- **In the author's self-review (gate 4):** no own finding is needed; the
+  separate agent is the impartial check.
+- Either way, the human must understand every finding before it goes into a
+  PR or a review, and decides what is fixed.
 
 ## What to read
 
@@ -30,7 +40,7 @@ memory.
 
 | # | Check | Rule |
 |---|---|---|
-| 1 | Type assertions (`as`, `<T>value`), `!` used to silence `noUncheckedIndexedAccess`, and `instanceof` or `in` checks that presuppose a concrete subtype (for example `cell instanceof HexCoord`) in production code | `AGENTS.md` §3, "You must never" |
+| 1 | Type assertions (`as`, `<T>value`), non-null assertions (`!`), and `instanceof` or `in` checks used to decide by an object's type (for example `cell instanceof HexCoord`) in production code, as far as this repository's `AGENTS.md` §3 forbids them | `AGENTS.md` §3, "You must never" |
 | 2 | `any`, `@ts-ignore`, `eslint-disable` without the human's approval and a comment saying why | `AGENTS.md` §3; `CONTRIBUTING.md` §4 |
 | 3 | Values from the game rules or the statement (board size and shape, tray size, limits, counts, scoring weights, thresholds) fixed in code, or the same value written in two files, layers or repositories | `CONTRIBUTING.md` §4, "Design for change" |
 | 4 | Randomness that does not go through an injected, seedable random source | `AGENTS.md` §4 |

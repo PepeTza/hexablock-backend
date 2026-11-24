@@ -49,7 +49,8 @@ Answer with the following and then **stop and wait for approval**:
 ## After completion
 
 1. Run the "Done" gate in `harness/checklists.md`, including the
-   `code-rules-review` and `architecture-review` skills on the branch.
+   `code-rules-review` and `architecture-review` skills, run on the branch by
+   a separate agent with a clean context, never by you.
 2. Add a row to `harness/phase-log.md`.
 3. Add an entry to `AI_USAGE.md` if the AI contribution was significant.
 4. Write a short **How it works** summary (5–10 lines, plain language) in the

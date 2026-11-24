@@ -9,8 +9,9 @@ it, so do not defend it.
 
 1. Read `.claude/skills/code-rules-review/SKILL.md` and follow it exactly.
    **Human first:** if you were given the human's own findings, check them
-   first. If you were given none, start your answer with one line reminding
-   them that the skill asks for their own finding before this second opinion.
+   first. If you review a teammate's PR and were given none, start your answer
+   with one line reminding the reviewer that the skill asks for their own
+   finding first. In the author's self-review no reminder is needed.
 2. Read what you were given: a branch (`git diff main...HEAD`) or a pull
    request (`gh pr diff <number>`), and every file it touches. Search the
    other repository (`../hexablock-client` or `../hexablock-backend`)

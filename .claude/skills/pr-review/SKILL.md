@@ -29,10 +29,10 @@ the change (`CONTRIBUTING.md` §3).
 
 | # | Check | Rule |
 |---|---|---|
-| 1 | The PR closes an issue; its acceptance criteria are met; no "Blocked by" issue is still open | `CONTRIBUTING.md` §6; `harness-task` skill |
-| 2 | Harness and traceability: branch name, Conventional Commits, `AI-Assisted` footers, human fixes in separate commits, row in `harness/phase-log.md`, `AI_USAGE.md` entry when significant, the PR template filled in (How it works, Self-review, Decisions) | `CONTRIBUTING.md` §2, §6; `AGENTS.md` §5; `log-ai-usage` skill |
-| 3 | A change to an endpoint, DTO or error code updates `docs/api-contracts.md` in the same PR and was approved; a change to a shared file has its twin PR and the `CONTRIBUTING.md` §10 check passes | backend `AGENTS.md` §1; `CONTRIBUTING.md` §10 |
-| 4 | **Decisions:** compare the diff with plan §7 and architecture §10. A PR that takes, changes or contradicts a decision, or implements one the plan still lists as open, updates both in the same PR, and a change was approved first | `CONTRIBUTING.md` §3; `AGENTS.md` §3 |
+| 1 | The PR closes an issue; its acceptance criteria are met; no "Blocked by" issue is still open | `CONTRIBUTING.md` §6, §7 |
+| 2 | Harness and traceability: branch name, Conventional Commits, `AI-Assisted` footers, human fixes in separate commits, row in `harness/phase-log.md`, `AI_USAGE.md` entry when significant, the PR template filled in (How it works, Self-review, Decisions) | `CONTRIBUTING.md` §1, §2, §3, §6; `AGENTS.md` §5; `log-ai-usage` skill |
+| 3 | A change to an endpoint, DTO or error code updates `docs/api-contracts.md` in the same PR and was approved; a change to a shared file has its twin PR and the `CONTRIBUTING.md` §10 check passes | backend `AGENTS.md` §1, §3; `CONTRIBUTING.md` §10 |
+| 4 | **Decisions:** compare the diff with plan §7 and architecture §10. A PR that takes, changes or contradicts a decision, or implements one the plan still lists as open, updates both in the same PR. Taking an open decision is approved by the task owner; changing a taken one needs another teammate's approval before merging | `CONTRIBUTING.md` §3; `AGENTS.md` §3 |
 | 5 | Overlaps: another open PR for the same issue or files, a PR made obsolete by another, or stacked PRs in the wrong order | `CONTRIBUTING.md` §3 |
 | 6 | CI is green and coverage holds | `CONTRIBUTING.md` §5, §6 |
 | 7 | Run `code-rules-review` and `architecture-review` on the diff (in Claude Code, through their subagents) and bring their findings in | those skills |

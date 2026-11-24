@@ -12,12 +12,22 @@ belong to the `code-rules-review` skill; the PR as a whole belongs to
 The architecture docs live in the client repository: `docs/architecture.md`
 and `docs/EXTENSIBILITY.md` (from the backend, `../hexablock-client/docs/`).
 
+## Who runs it
+
+A separate agent with a clean context: in Claude Code, the `architecture-review`
+subagent; in other tools, a new session. If you are the agent that wrote this
+code, do not run this skill yourself: ask for a separate agent, so the review
+is impartial (`CONTRIBUTING.md` §3).
+
 ## Before you start: human first
 
-The person who asked for the review writes down at least one finding of their
-own first. This skill is a second opinion: whatever it finds that they
-missed, they must understand before it goes into a PR or a review
-(`CONTRIBUTING.md` §3).
+- **In a review of a teammate's PR:** the reviewer writes down at least one
+  finding of their own first. This skill is a second opinion (`CONTRIBUTING.md`
+  §3).
+- **In the author's self-review (gate 4):** no own finding is needed; the
+  separate agent is the impartial check.
+- Either way, the human must understand every finding before it goes into a
+  PR or a review, and decides what is fixed.
 
 ## What to read
 

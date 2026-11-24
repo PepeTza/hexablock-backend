@@ -176,18 +176,26 @@ A `pre-commit` hook also runs lint and formatting on staged files
   plain-language lines, so any teammate can explain it), **How to test** and
   the **Checklist**. The template is the source of truth; this guide does not
   repeat it.
-- **Self-review before opening it:** the author runs the
+- **Self-review before opening it:** the
   [`code-rules-review`](./.claude/skills/code-rules-review/SKILL.md) and
   [`architecture-review`](./.claude/skills/architecture-review/SKILL.md)
-  skills on the branch and fixes or explains each finding in the
+  skills are run on the branch by a separate agent with a clean context (in
+  Claude Code, their subagents; in other tools, a new session), **never by the
+  agent that wrote the code**, so the review is impartial. The author reads
+  the result, decides, and fixes or explains each finding in the
   **Self-review** section of the template.
 - **Decisions are written back:** a PR that takes, changes or contradicts a
   decision or a part of the implementation plan updates
   `docs/implementation-plan.md` §7 (status) and `docs/architecture.md` §10
   (record) in the client repository, in the same PR, and says so in the
-  **Decisions** section of the template. Changing a decision needs the team's
-  approval first. GitHub issues hold the status of tasks; §7 and §10 hold the
-  decisions, so no other status document is kept.
+  **Decisions** section of the template. Who approves:
+  - **taking** a decision the plan lists as open: the human who owns the
+    task, who records it;
+  - **changing or contradicting** a decision already taken: another teammate,
+    in the issue or in the PR review, before the PR is merged.
+
+  GitHub issues hold the status of tasks; §7 and §10 hold the decisions, so
+  no other status document is kept.
 
 - Open it as **Draft** while work is in progress; mark it ready when the DoD is
   met.
@@ -376,5 +384,5 @@ it from the PR description:
 Quick check before opening the PR, from the client repository:
 
 ```bash
-for f in CONTRIBUTING.md harness/README.md harness/checklists.md harness/task-template.md .github/pull_request_template.md .editorconfig .claude/skills/code-rules-review/SKILL.md .claude/agents/code-rules-review.md .claude/skills/architecture-review/SKILL.md .claude/agents/architecture-review.md .claude/skills/pr-review/SKILL.md .claude/agents/pr-review.md; do diff -q "$f" "../hexablock-backend/$f"; done
+for f in CONTRIBUTING.md harness/README.md harness/checklists.md harness/task-template.md .github/pull_request_template.md .editorconfig .claude/skills/harness-task/SKILL.md .claude/skills/aaa-test/SKILL.md .claude/skills/log-ai-usage/SKILL.md .claude/skills/code-rules-review/SKILL.md .claude/agents/code-rules-review.md .claude/skills/architecture-review/SKILL.md .claude/agents/architecture-review.md .claude/skills/pr-review/SKILL.md .claude/agents/pr-review.md; do diff -q "$f" "../hexablock-backend/$f"; done
 ```

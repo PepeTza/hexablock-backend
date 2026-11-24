@@ -58,5 +58,6 @@ example `feat/9-hex-geometry`. The type is one of the commit types of
 - Gate 2: build only what was approved; if the plan must change, stop and ask.
 - Gate 3: show the diff and the commit message before every commit.
 - Gate 4: run the done checklist, including the `code-rules-review` and
-  `architecture-review` skills on the branch, then use the `log-ai-usage`
-  skill.
+  `architecture-review` skills, run on the branch by a separate agent with a
+  clean context (never by you, since you wrote the code), then use the
+  `log-ai-usage` skill.

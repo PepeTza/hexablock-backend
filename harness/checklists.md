@@ -8,8 +8,9 @@
 - [ ] Listed the test cases.
 - [ ] Explained the design choices and any new concept.
 - [ ] Said whether the task differs from `docs/implementation-plan.md` or a
-      recorded decision (plan §7, architecture §10); if it does, the human
-      approved it.
+      recorded decision (plan §7, architecture §10); if it takes an open one,
+      the task owner approved it; if it changes a taken one, another teammate
+      approved it (`CONTRIBUTING.md` §3).
 - [ ] Every decision with alternatives presented as options with pros and
       cons and a recommendation, for the human to decide.
 - [ ] Confidence ≥ 95 %, or questions asked and answered.
@@ -42,8 +43,9 @@
       business logic in UI or controllers.
 - [ ] Acceptance criteria of the user story met.
 - [ ] Docs and diagrams updated if the design changed.
-- [ ] Self-review: ran `code-rules-review` and `architecture-review` on the
-      branch; each finding fixed or explained in the PR's **Self-review**.
+- [ ] Self-review: a separate agent with a clean context (not the one that
+      wrote the code) ran `code-rules-review` and `architecture-review` on
+      the branch; each finding fixed or explained in the PR's **Self-review**.
 - [ ] Decisions taken or changed written back to plan §7 and architecture
       §10, and listed in the PR's **Decisions**.
 - [ ] What the agent did on its own ("do and report") listed in the summary.

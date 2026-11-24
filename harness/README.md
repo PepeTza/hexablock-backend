@@ -24,10 +24,10 @@ Details for each gate are in [`checklists.md`](./checklists.md).
 3. The agent answers with its plan (gate 1). Read it. If you do not understand
    something, ask until you do; only then approve.
 4. The agent implements and proposes commits (gates 2 and 3).
-5. The agent runs the done checklist (gate 4), including the
-   `code-rules-review` and `architecture-review` skills on its branch, adds a
-   row to [`phase-log.md`](./phase-log.md) and an entry to `AI_USAGE.md` if
-   the AI use was significant.
+5. The agent runs the done checklist (gate 4), with a separate agent running
+   the `code-rules-review` and `architecture-review` skills on its branch,
+   adds a row to [`phase-log.md`](./phase-log.md) and an entry to
+   `AI_USAGE.md` if the AI use was significant.
 6. Open the PR. The reviewer writes the review with the `pr-review` skill
    (their own finding first), which runs the other reviewer skills and drafts
    the comment; the reviewer decides what to publish.
