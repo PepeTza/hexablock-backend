@@ -62,18 +62,38 @@ Every task follows [`harness/`](./harness/README.md). In short:
 1. **Plan first.** Before writing code, read the relevant docs and files,
    then answer with the current state, the plan file by file, the design and
    any new concepts explained, the test cases, what is out of scope and your
-   confidence. **Stop and wait for approval.**
+   confidence. Say whether the task differs from
+   `docs/implementation-plan.md` or a recorded decision, and how. **Stop and
+   wait for approval.**
 2. **Build** only what was approved. If the plan has to change, stop and ask.
 3. **Commit** only after the human approves the diff and the message.
    Current mode: **approval per commit**. The team may later switch to
    approval per push by editing this line.
-4. **Done:** run the checklist, update `harness/phase-log.md`, add an
-   `AI_USAGE.md` entry if significant, and write a short "How it works"
-   summary for the PR.
+4. **Done:** run the checklist, run the `code-rules-review` and
+   `architecture-review` skills on your branch and fix or explain each
+   finding, update `harness/phase-log.md`, add an `AI_USAGE.md` entry if
+   significant, and write a short "How it works" summary for the PR. List
+   what you did on your own (see §3, "You may do and report").
 
-## 3. What you may decide, what you must ask, what you must never do
+## 3. What you may do, what you must ask, what you must never do
 
-### You may decide on your own
+### Decisions: you recommend, the human decides
+
+You never take a decision that has real alternatives: design, behaviour, the
+API contract, interpreting a rule, the outcome of a review. Present it
+instead:
+
+- two or three options, each with a one-line pro and con;
+- the one you recommend, marked;
+- **one decision at a time**, so the human can understand each one.
+
+The human decides. A decision that affects the design or the plan is then
+written back as `CONTRIBUTING.md` §3 says.
+
+### You may do and report
+
+Mechanical work with no real alternative. Do it, then list it in your summary
+so the human sees it:
 
 - Names and structure of private helpers inside the files of the task.
 - Small refactors inside the files you are already changing for the task,
@@ -84,7 +104,9 @@ Every task follows [`harness/`](./harness/README.md). In short:
 
 - Anything that changes a documented decision: architecture, layers, patterns,
   generic type parameters and their constraints, public interfaces of the
-  domain.
+  domain. When a task takes, changes or contradicts a decision or a part of
+  the plan, the same PR updates `docs/implementation-plan.md` §7 and
+  `docs/architecture.md` §10 (in the client repository).
 - Adding, removing or upgrading a dependency.
 - Changing the API contract (`docs/api-contracts.md`) or the database schema.
 - Interpreting or deviating from a business rule (RN-xx) or a use case

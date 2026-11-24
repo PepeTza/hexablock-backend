@@ -176,6 +176,18 @@ A `pre-commit` hook also runs lint and formatting on staged files
   plain-language lines, so any teammate can explain it), **How to test** and
   the **Checklist**. The template is the source of truth; this guide does not
   repeat it.
+- **Self-review before opening it:** the author runs the
+  [`code-rules-review`](./.claude/skills/code-rules-review/SKILL.md) and
+  [`architecture-review`](./.claude/skills/architecture-review/SKILL.md)
+  skills on the branch and fixes or explains each finding in the
+  **Self-review** section of the template.
+- **Decisions are written back:** a PR that takes, changes or contradicts a
+  decision or a part of the implementation plan updates
+  `docs/implementation-plan.md` §7 (status) and `docs/architecture.md` §10
+  (record) in the client repository, in the same PR, and says so in the
+  **Decisions** section of the template. Changing a decision needs the team's
+  approval first. GitHub issues hold the status of tasks; §7 and §10 hold the
+  decisions, so no other status document is kept.
 
 - Open it as **Draft** while work is in progress; mark it ready when the DoD is
   met.
@@ -277,6 +289,10 @@ A task is done when **all** of these are true:
 - [ ] CI green on the PR.
 - [ ] Review requested from a teammate (§3).
 - [ ] Layer rule respected; no business logic in the UI.
+- [ ] Self-review done: `code-rules-review` and `architecture-review` run on
+      the branch, each finding fixed or explained (§3).
+- [ ] Decisions taken or changed are written back to plan §7 and
+      architecture §10 (§3).
 - [ ] Acceptance criteria of the user story met.
 - [ ] AI usage traced (commit footers, `AI_USAGE.md` when significant).
 - [ ] Docs and diagrams updated if the design changed.
@@ -328,8 +344,13 @@ A task is done when **all** of these are true:
   several run in parallel) and follows the same rules as a human contributor.
 - The human who launches the agent is the author of the PR and is responsible
   for it: they must review, understand and be able to explain every line.
-- Agent rules (what it may decide alone, what it must ask, what it must never
-  touch) live in [`AGENTS.md`](./AGENTS.md).
+- **Agents recommend, humans decide.** An agent never takes a decision with
+  real alternatives: it presents two or three options with a one-line pro and
+  con each, marks the one it recommends, one decision at a time, and the
+  human decides. Mechanical work with no real alternative it does and
+  reports.
+- Agent rules (what it may do and report, what it must ask, what it must
+  never touch) live in [`AGENTS.md`](./AGENTS.md).
 - Every commit is authored by the team member, never by the tool: set
   `git config user.name` and `user.email` in each session (including cloud
   sessions) before committing, and reset the author of any commit that came

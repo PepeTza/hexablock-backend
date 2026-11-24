@@ -18,7 +18,10 @@ Answer with the following and then **stop and wait for approval**:
 
 1. **Current state:** what exists today in the files involved, in plain
    language.
-2. **Plan:** what you will create or change, file by file.
+2. **Plan:** what you will create or change, file by file. Say whether it
+   differs from `docs/implementation-plan.md` or a recorded decision, and
+   how; any decision with alternatives goes as options with pros and cons
+   and your recommendation, for the human to decide.
 3. **Design:** which classes, interfaces, patterns or generics are involved
    and why. Explain any concept the team may not know.
 4. **Test cases:** the list of tests you will write
@@ -45,7 +48,8 @@ Answer with the following and then **stop and wait for approval**:
 
 ## After completion
 
-1. Run the "Done" gate in `harness/checklists.md`.
+1. Run the "Done" gate in `harness/checklists.md`, including the
+   `code-rules-review` and `architecture-review` skills on the branch.
 2. Add a row to `harness/phase-log.md`.
 3. Add an entry to `AI_USAGE.md` if the AI contribution was significant.
 4. Write a short **How it works** summary (5–10 lines, plain language) in the

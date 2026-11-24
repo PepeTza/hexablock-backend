@@ -30,7 +30,11 @@ This skill covers how to start one; the checklists are in
 Use exactly these sections, in this order:
 
 1. **Current state:** what exists today in the files involved, in plain language.
-2. **Plan:** what you will create or change, file by file.
+2. **Plan:** what you will create or change, file by file. Say whether it
+   differs from `docs/implementation-plan.md` or a recorded decision, and
+   how. Any decision with alternatives goes as two or three options with a
+   pro and a con each and your recommendation; the human decides
+   (`AGENTS.md` §3).
 3. **Design:** classes, interfaces, patterns and generics involved, and why.
    Explain every concept the team may not know yet, briefly.
 4. **Test cases:** `should_<result>_when_<condition>`, one plain-language line
@@ -53,4 +57,6 @@ example `feat/9-hex-geometry`. The type is one of the commit types of
 
 - Gate 2: build only what was approved; if the plan must change, stop and ask.
 - Gate 3: show the diff and the commit message before every commit.
-- Gate 4: run the done checklist, then use the `log-ai-usage` skill.
+- Gate 4: run the done checklist, including the `code-rules-review` and
+  `architecture-review` skills on the branch, then use the `log-ai-usage`
+  skill.
