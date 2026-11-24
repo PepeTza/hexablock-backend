@@ -106,6 +106,27 @@ export class LevelDefinitionResponse {
   readonly publishedAt!: string;
 }
 
+/** Query of `GET /levels/{gameId}`: the last `order` the device has. */
+export class ListLevelsQuery {
+  @ApiProperty({
+    required: false,
+    minimum: 0,
+    example: 12,
+    description: 'Return only levels with a greater order; all when absent',
+  })
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  @Min(0)
+  readonly after?: number;
+}
+
+/** Body of `GET /levels/{gameId}`. */
+export class LevelListResponse {
+  @ApiProperty({ type: [LevelDefinitionResponse] })
+  readonly levels!: LevelDefinitionResponse[];
+}
+
 /** The request's seed config as the domain type, or `null` when absent. */
 export function toSeedConfig(
   body: SeedConfigRequest | undefined,

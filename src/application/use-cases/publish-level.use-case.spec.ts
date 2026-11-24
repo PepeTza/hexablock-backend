@@ -37,6 +37,10 @@ class InMemoryLevelCatalog implements ILevelCatalog {
       publishedAt: NOW,
     });
   }
+
+  listAfter(): Promise<PublishedLevel[]> {
+    return Promise.reject(new Error('not used by this use case'));
+  }
 }
 
 /** A validator stub that reports the given violations for any spec. */

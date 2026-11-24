@@ -34,4 +34,7 @@ export interface ILevelCatalog {
    * seed config, atomically.
    */
   publish(level: NewLevel): Promise<PublishedLevel>;
+
+  /** The levels of `gameId` with `order > after`, sorted by `order`. */
+  listAfter(gameId: GameId, after: number): Promise<PublishedLevel[]>;
 }
