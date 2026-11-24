@@ -334,3 +334,21 @@ To be completed at the end of the project.
   `change-scenarios` skill, its subagent and the "Change scenarios" section
   of the gate 1 plan; only the "Design for change" rule remains. Restoring
   them is a revert of that commit.
+
+### 2026-11-23 — Reviewer skills, review format and decisions rule (issue #58)
+
+- **Tool / model:** Claude Code (claude-opus-5-5).
+- **Issue / PR:** #58, twin of PepeTza/hexablock-client#167.
+- **Prompt (paraphrase):** apply in this repository the same reviewer skills,
+  review format and decisions rule as the client.
+- **Result:** the shared files copied from the client; `AGENTS.md` edited by
+  hand with this repository's rules: no casts except `as const` and no
+  non-null assertions (the lint follows once #51 removes the four current
+  casts), and `instanceof` only in adapters and frameworks to translate
+  NestJS and Prisma exceptions (#62 removes the three uses in use cases). The
+  full entry, with the team's decisions, is in the client's `AI_USAGE.md`.
+- **Team modifications:** Ronald chose the boundary-only `instanceof` rule
+  for the backend instead of the client's zero rule, because exception
+  filters translate by class; he will confirm it with the teacher.
+- **Lessons / limitations:** a probe with the cast lint found four files with
+  casts, not the two listed in #51 (reported on #51).
