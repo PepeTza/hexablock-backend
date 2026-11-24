@@ -130,6 +130,24 @@ describe('Levels (e2e)', () => {
     expect(seed).toMatchObject({ mode: 'fixed', value: 4294967295n });
   });
 
+  it('should_store_a_random_seed_without_value_when_the_mode_is_random', async () => {
+    // Arrange
+    const admin = await registerAdmin();
+
+    // Act
+    const response = await publish(admin, 'hexa-sort', {
+      ...validBody,
+      seedConfig: { mode: 'random' },
+    });
+
+    // Assert
+    expect(response.status).toBe(201);
+    const seed = await prisma.seedConfig.findFirst({
+      where: { levelId: (response.body as LevelBody).id },
+    });
+    expect(seed).toMatchObject({ mode: 'random', value: null });
+  });
+
   it('should_return_401_when_publishing_without_a_token', async () => {
     // Act
     const response = await publish(null, 'hexa-sort', validBody);

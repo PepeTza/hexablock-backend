@@ -178,6 +178,13 @@ describe('SortSpecV1Validator', () => {
     ['colors above 8', { colors: 9 }, 'spec.colors'],
     ['goals of 0', { goals: 0 }, 'spec.goals'],
     ['goals above 99', { goals: 100 }, 'spec.goals'],
+    [
+      'maxColorsPerStack of 0',
+      {
+        tray: { size: 1, minHeight: 2, maxHeight: 6, maxColorsPerStack: 0 },
+      },
+      'spec.tray.maxColorsPerStack',
+    ],
   ])('should_reject_the_spec_when_it_has_%s', (_case, change, field) => {
     // Act / Assert
     expect(fieldsOf({ ...contractExample(), ...change })).toContain(field);
