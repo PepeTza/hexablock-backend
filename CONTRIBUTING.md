@@ -190,6 +190,11 @@ approval, so a PR never waits for a teammate who is not available.
   is met, without waiting for the review.
 - The reviewer checks behaviour **and** design: layer rule, patterns used as
   documented, no logic in the UI, tests that test something real.
+- The reviewer writes the review with the
+  [`pr-review`](./.claude/skills/pr-review/SKILL.md) skill, which runs
+  `code-rules-review` and `architecture-review` and drafts the comment in the
+  team's fixed format. The skill suggests; the reviewer decides the verdict,
+  the severities and what to publish, after writing their own finding first.
 - The reviewer must be able to explain the change. If they cannot, they ask
   before approving.
 - Teammates can also review after the merge, by commenting on the closed PR.
@@ -343,11 +348,12 @@ it from the PR description:
 - `.github/pull_request_template.md`
 - `.editorconfig`
 - `.claude/skills/harness-task`, `aaa-test`, `log-ai-usage`,
-  `code-rules-review` and `architecture-review`
-- `.claude/agents/code-rules-review.md` and `architecture-review.md`
+  `code-rules-review`, `architecture-review` and `pr-review`
+- `.claude/agents/code-rules-review.md`, `architecture-review.md` and
+  `pr-review.md`
 
 Quick check before opening the PR, from the client repository:
 
 ```bash
-for f in CONTRIBUTING.md harness/README.md harness/checklists.md harness/task-template.md .github/pull_request_template.md .editorconfig .claude/skills/code-rules-review/SKILL.md .claude/agents/code-rules-review.md .claude/skills/architecture-review/SKILL.md .claude/agents/architecture-review.md; do diff -q "$f" "../hexablock-backend/$f"; done
+for f in CONTRIBUTING.md harness/README.md harness/checklists.md harness/task-template.md .github/pull_request_template.md .editorconfig .claude/skills/code-rules-review/SKILL.md .claude/agents/code-rules-review.md .claude/skills/architecture-review/SKILL.md .claude/agents/architecture-review.md .claude/skills/pr-review/SKILL.md .claude/agents/pr-review.md; do diff -q "$f" "../hexablock-backend/$f"; done
 ```
