@@ -1,6 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
   IsIn,
+  IsOptional,
+  IsUUID,
   Validate,
   type ValidationArguments,
   ValidatorConstraint,
@@ -61,4 +63,16 @@ export function toSeedConfig(body: SeedConfigRequest): SeedConfig {
   return body.mode === 'fixed' && body.value !== undefined
     ? { mode: 'fixed', value: body.value }
     : { mode: 'random' };
+}
+
+/** Query of `PUT /seed-config/{gameId}`: which Hexa Sort level, if any. */
+export class ConfigureSeedQuery {
+  @ApiProperty({
+    required: false,
+    format: 'uuid',
+    description: 'Required for hexa-sort, not allowed for the other games',
+  })
+  @IsOptional()
+  @IsUUID()
+  readonly levelId?: string;
 }
