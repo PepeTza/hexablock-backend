@@ -33,10 +33,13 @@ class SeedValueRule implements ValidatorConstraintInterface {
   }
 }
 
+/** An unknown mode is left to `@IsIn`, so it is reported only once. */
 function issueOf(config: unknown): string | null {
-  return isRecord(config)
-    ? seedConfigIssue(config.mode, config.value)
-    : 'seed config must be an object';
+  if (!isRecord(config)) {
+    return 'seed config must be an object';
+  }
+  const knownMode = SEED_MODES.some((mode) => mode === config.mode);
+  return knownMode ? seedConfigIssue(config.mode, config.value) : null;
 }
 
 /**
