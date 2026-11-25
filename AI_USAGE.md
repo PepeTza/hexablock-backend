@@ -388,6 +388,42 @@ One entry per significant use. Copy the template.
   - `plausibility-limits.ts` still repeats Hexa Sort limits (19 cells,
     9 chips) that now live in `SORT_SPEC_V1`; left for #47.
 
+### 2026-11-24 — Get and configure the seed config
+
+- **Tool / model:** Claude Code, claude-opus-5-5.
+- **Issue / PR:** #28.
+- **Prompt (paraphrase):** implement issue #28 through the harness with
+  Clean Architecture, SOLID and the agreed patterns, one commit at a time,
+  stacked on the #34 branch.
+- **Result:** the contract lines for the default config and the PUT
+  errors, `seedScopeOf` and `DEFAULT_SEED_CONFIG` in the domain, a shared
+  `SeedConfigRequest` DTO, the `ISeedConfigStore` port with its Prisma
+  adapter (find then update or create under an advisory lock), the get and
+  configure use cases, both endpoints, and unit and e2e tests.
+- **Team modifications:**
+  - The owner chose the default for a game or level never configured:
+    random with `updatedAt: null`, written in the contract, instead of a
+    404 or seeding rows.
+  - The owner asked whether any class creates its own dependencies; the
+    check confirmed that only the composition root uses `new`.
+  - The 4-lens review flagged an e2e test that left the shared Hexa Lines
+    row changed; it now restores the rows it removes.
+  - A self-review by a separate agent found a regression: moving the seed
+    DTO let `POST /levels` accept an array as `seedConfig` and publish a
+    random seed. It was fixed with `@IsObject()` and e2e cases in its own
+    commit, together with an unknown mode reported twice.
+  - The owner ran the endpoints by hand (default, save, read, 401, 400,
+    404).
+- **Lessons / limitations:**
+  - The concurrency e2e passes even without the lock: the gap between the
+    read and the write is too short to race. The lock was proven by
+    widening it with `pg_sleep` (7 of 8 saves failed without the lock, all
+    passed with it); the test stays as a safety net only.
+  - Only the last change of each config is audited; a full history would
+    be a new issue.
+  - `seedScopeOf` still reads two helpers keyed by game; #68 moves it to a
+    single traits catalog.
+
 ## 3. Critical evaluation
 
 To be completed at the end of the project.
