@@ -236,6 +236,13 @@ belong to. Do not squash other people's commits.
 - Respect the dependency rule of [`docs/architecture.md`](./docs/architecture.md):
   domain code imports nothing from use cases, adapters or frameworks.
 - No business rules in UI components or controllers.
+- **Design for change.** Never assume a requirement will not change: a client
+  (or the teacher) may change one in the last days before a delivery. Values
+  that come from the game rules or the statement (board size and shape,
+  limits, counts, formulas) are data: a level spec, configuration, or a
+  parameter with a default. They are not constants repeated across files. When
+  a constant is unavoidable, it lives in one named place and everything that
+  depends on it is derived from it, so changing it never fails silently.
 
 ---
 
