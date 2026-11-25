@@ -39,7 +39,7 @@ import {
   ListLevelsQuery,
   PublishLevelRequest,
   toLevelDefinitionResponse,
-  toSeedConfig,
+  toLevelSeedConfig,
 } from './level.dto';
 
 /** Translates the level endpoints (api-contracts §6) to the use cases. */
@@ -94,7 +94,7 @@ export class LevelsController {
       gameId,
       schemaVersion: body.schemaVersion,
       spec: body.spec,
-      seedConfig: toSeedConfig(body.seedConfig),
+      seedConfig: toLevelSeedConfig(body.seedConfig),
     });
     return toLevelDefinitionResponse(level);
   }

@@ -1,64 +1,22 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import {
-  IsIn,
   IsInt,
   IsObject,
   IsOptional,
   Max,
   Min,
-  Validate,
-  type ValidationArguments,
   ValidateIf,
   ValidateNested,
-  ValidatorConstraint,
-  type ValidatorConstraintInterface,
 } from 'class-validator';
 
 import type { PublishedLevel } from '../../../application/ports/level-catalog';
 import { GAME_IDS, type GameId } from '../../../domain/game/game-id';
-import { isRecord } from '../../../domain/level/json-shape';
-import {
-  MAX_SEED_VALUE,
-  type SeedConfig,
-  SEED_MODES,
-  type SeedMode,
-  seedConfigIssue,
-} from '../../../domain/seed/seed-config';
+import type { SeedConfig } from '../../../domain/seed/seed-config';
+import { SeedConfigRequest, toSeedConfig } from '../seed/seed-config.dto';
 
 // Level orders are stored in an `int` column; a bigger `after` is a 400.
 const MAX_ORDER = 2_147_483_647;
-
-/** `fixed` needs a 32-bit `value`; `random` takes none (api-contracts §7). */
-@ValidatorConstraint({ name: 'seedConfig' })
-class SeedConfigRule implements ValidatorConstraintInterface {
-  validate(value: unknown): boolean {
-    return isRecord(value) && seedConfigIssue(value.mode, value.value) === null;
-  }
-
-  defaultMessage(args: ValidationArguments): string {
-    const value: unknown = args.value;
-    return isRecord(value)
-      ? (seedConfigIssue(value.mode, value.value) ?? 'invalid seedConfig')
-      : 'seedConfig must be an object';
-  }
-}
-
-/** The seed config of a Hexa Sort level (api-contracts §7). */
-export class SeedConfigRequest {
-  @ApiProperty({ enum: SEED_MODES, example: 'random' })
-  @IsIn(SEED_MODES)
-  readonly mode!: SeedMode;
-
-  @ApiProperty({
-    required: false,
-    minimum: 0,
-    maximum: MAX_SEED_VALUE,
-    description: 'Required when mode is fixed, absent when random',
-  })
-  @IsOptional()
-  readonly value?: number;
-}
 
 /**
  * Body of `POST /levels/{gameId}`. Checks the envelope only; the `spec` is
@@ -87,7 +45,6 @@ export class PublishLevelRequest {
   })
   // Absent is fine; `null` must fail like any other non-object value.
   @ValidateIf((_body: object, value: unknown) => value !== undefined)
-  @Validate(SeedConfigRule)
   @ValidateNested()
   @Type(() => SeedConfigRequest)
   readonly seedConfig?: SeedConfigRequest;
@@ -137,17 +94,11 @@ export class LevelListResponse {
   readonly levels!: LevelDefinitionResponse[];
 }
 
-/** The request's seed config as the domain type, or `null` when absent. */
-export function toSeedConfig(
+/** The level's seed config as the domain type, or `null` when absent. */
+export function toLevelSeedConfig(
   body: SeedConfigRequest | undefined,
 ): SeedConfig | null {
-  if (body === undefined) {
-    return null;
-  }
-  // SeedConfigRule already guaranteed a value exactly when mode is fixed.
-  return body.mode === 'fixed' && body.value !== undefined
-    ? { mode: 'fixed', value: body.value }
-    : { mode: 'random' };
+  return body === undefined ? null : toSeedConfig(body);
 }
 
 /** A published level as the contract's JSON (dates in ISO). */
