@@ -103,6 +103,15 @@ Every task follows [`harness/`](./harness/README.md). In short:
   change, stop and report it.
 - Use `any`, `@ts-ignore` or `eslint-disable` to silence an error without the
   human's approval and a comment explaining why.
+- Use type assertions / casts (`as SomeType`, `<SomeType>value`, except
+  `as const`) or non-null assertions (`value!`) in production code — enforced
+  by ESLint (existing legacy adapter casts tracked in `#51`). Use generics,
+  polymorphism, or narrowing (`typeof`, explicit `undefined` checks) instead.
+- Use `instanceof` in `src/domain/` or `src/application/` — enforced by ESLint
+  (existing legacy use-case uses tracked in `#62`); use polymorphism or
+  `Either`/domain error results instead. `instanceof` is allowed only in
+  `src/adapters/` and `src/frameworks/` to translate NestJS and Prisma
+  exceptions.
 - Put business rules in UI components, screens or HTTP controllers.
 
 ## 4. Code rules (summary)
@@ -152,6 +161,9 @@ override them.
 | [`aaa-test`](./.claude/skills/aaa-test/SKILL.md) | Proposing or writing any test |
 | [`api-endpoint`](./.claude/skills/api-endpoint/SKILL.md) | Implementing or changing an endpoint |
 | [`log-ai-usage`](./.claude/skills/log-ai-usage/SKILL.md) | Gate 4, before opening the pull request |
+| [`review`](./.claude/skills/review/SKILL.md) | Gate 4 or PR review: impartial second-opinion check (architecture, design for change, contracts, tests, scope) |
 
-`harness-task`, `aaa-test` and `log-ai-usage` are shared with the client
-repository: whoever changes one updates the other copy the same day.
+`harness-task`, `aaa-test`, `log-ai-usage` and `review` (with its read-only
+subagent in [`.claude/agents/review.md`](./.claude/agents/review.md)) are
+shared with the client repository: whoever changes one updates the other
+copy the same day.
