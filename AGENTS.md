@@ -122,6 +122,9 @@ The full rules are in [`CONTRIBUTING.md`](./CONTRIBUTING.md).
   [glossary](https://github.com/PepeTza/hexablock-client/blob/main/docs/glossary.md).
 - Dependency rule: inner layers never import outer ones. The domain has no
   framework, UI, storage or network imports.
+- Design for change (`CONTRIBUTING.md` §4): never assume a requirement will
+  not change. Values from the game rules or the statement (board size and
+  shape, limits, counts, formulas) are data, not scattered constants.
 - Randomness always goes through an injected, seedable random source, so
   tests are deterministic.
 - Tests: `should_<result>_when_<condition>`, Arrange / Act / Assert. You
