@@ -22,6 +22,10 @@ class FakeSeedConfigStore implements ISeedConfigStore {
   listForLevels(): Promise<LevelSeedConfig[]> {
     return Promise.resolve(this.levels);
   }
+
+  save(): Promise<StoredSeedConfig> {
+    return Promise.reject(new Error('not used by this use case'));
+  }
 }
 
 describe('GetSeedConfigUseCase', () => {
