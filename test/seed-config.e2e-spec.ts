@@ -296,6 +296,20 @@ describe('Seed config (e2e)', () => {
     expect(response.status).toBe(403);
   });
 
+  it('should_report_an_unknown_mode_once_when_putting_a_config', async () => {
+    // Arrange
+    const admin = await registerAdmin();
+
+    // Act
+    const response = await configure(admin, 'hexa-lines', { mode: 'FIXED' });
+
+    // Assert
+    expect(response.status).toBe(400);
+    expect(response.body).toMatchObject({
+      details: [{ field: 'mode', issue: 'in' }],
+    });
+  });
+
   it('should_return_404_when_the_sort_level_is_unknown', async () => {
     // Arrange
     const admin = await registerAdmin();

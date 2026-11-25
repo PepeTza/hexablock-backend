@@ -43,8 +43,10 @@ export class PublishLevelRequest {
     required: false,
     description: 'Required for hexa-sort, not allowed for hexa-fit',
   })
-  // Absent is fine; `null` must fail like any other non-object value.
+  // Absent is fine; `null` and arrays must fail like any other non-object
+  // value (`@ValidateNested` alone accepts an array and checks each item).
   @ValidateIf((_body: object, value: unknown) => value !== undefined)
+  @IsObject()
   @ValidateNested()
   @Type(() => SeedConfigRequest)
   readonly seedConfig?: SeedConfigRequest;

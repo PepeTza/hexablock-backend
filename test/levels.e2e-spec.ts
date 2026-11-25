@@ -188,6 +188,16 @@ describe('Levels (e2e)', () => {
     ['an unknown body field', 'hexa-sort', { ...validBody, theme: 'dark' }],
     ['a null seedConfig', 'hexa-sort', { ...validBody, seedConfig: null }],
     [
+      'an empty array seedConfig',
+      'hexa-sort',
+      { ...validBody, seedConfig: [] },
+    ],
+    [
+      'an array seedConfig',
+      'hexa-sort',
+      { ...validBody, seedConfig: [{ mode: 'fixed', value: 1 }] },
+    ],
+    [
       'a null seedConfig for hexa-fit',
       'hexa-fit',
       { schemaVersion: 1, spec: {}, seedConfig: null },
