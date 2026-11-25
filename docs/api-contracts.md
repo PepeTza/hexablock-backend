@@ -538,6 +538,10 @@ started on the device (CU-15 A3).
 
 `hexa-fit`: `400` (no randomness).
 
+`hexa-sort` lists every published level, in level order. While the admin has
+never configured a game or a level, its `config` is the default
+`{ "mode": "random" }` (RN-05) and its `updatedAt` is `null`.
+
 ### `PUT /seed-config/{gameId}?levelId=` — admin (CU-18)
 
 - `levelId` is required for `hexa-sort` and not allowed for `hexa-lines` /
@@ -548,8 +552,8 @@ started on the device (CU-15 A3).
 Response `200`: the updated config, in the same shape as the `GET` (only the
 affected entry for Sort).
 
-Errors: `400` invalid value or `levelId` misuse, `403` not an admin, `404`
-unknown `levelId`.
+Errors: `400` invalid value, `levelId` misuse or `hexa-fit` (no randomness),
+`401` no valid token, `403` not an admin, `404` unknown `levelId`.
 
 ---
 
