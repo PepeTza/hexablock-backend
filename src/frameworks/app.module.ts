@@ -10,6 +10,7 @@ import { LevelsModule } from './levels/levels.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { ProgressModule } from './progress/progress.module';
 import { ScoresModule } from './scores/scores.module';
+import { SeedConfigModule } from './seed/seed-config.module';
 
 /** Root module: every feature module of the API is imported here. */
 @Module({
@@ -30,6 +31,7 @@ import { ScoresModule } from './scores/scores.module';
     ProgressModule,
     LevelsModule,
     ScoresModule,
+    SeedConfigModule,
   ],
 })
 export class AppModule {}
