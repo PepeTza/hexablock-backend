@@ -22,7 +22,7 @@ backend must not change it without updating this file first.
 | Item | Convention |
 |---|---|
 | Base path | `/api/v1` (all routes below are relative to it) |
-| Admin panel | A web app in the client repo (`admin/`) that uses this API with an admin token; the API allows its origin through CORS |
+| Admin panel | A web app in the client repo (`admin/`) that uses this API with an admin token; the API allows its origin through CORS (`CORS_ORIGINS`, see README), with methods `GET`, `POST`, `PUT`, headers `Authorization` and `Content-Type`, and no credentials |
 | Format | JSON, UTF-8. Field names in `camelCase` |
 | Dates | ISO 8601 in UTC, e.g. `2026-11-10T22:05:00Z` |
 | Durations | Milliseconds (`durationMs`) |

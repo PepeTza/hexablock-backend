@@ -424,6 +424,32 @@ One entry per significant use. Copy the template.
   - `seedScopeOf` still reads two helpers keyed by game; #68 moves it to a
     single traits catalog.
 
+### 2026-11-26 — Allow the admin panel origins through CORS
+
+- **Tool / model:** Claude Code, claude-opus-5-5.
+- **Issue / PR:** #67.
+- **Prompt (paraphrase):** start #67 with the approved plan, one commit at
+  a time, explaining each change for a beginner and how to test it.
+- **Result:** the `CORS_ORIGINS` variable with its validation and unit
+  tests, `app.enableCors` limited to those origins with e2e tests
+  (preflight, allowed, rejected, none configured), the `AppSettings`
+  parameter object, and the docs.
+- **Team modifications:**
+  - The owner forbids agents from editing `.env.example`; the AI gave the
+    exact line and the owner added it by hand.
+  - The planned commit scope `config` was rejected by commitlint; the
+    owner approved `api`, the scope used before for this file.
+  - Two validation cases (a value that is not a URL, an empty entry) were
+    added beyond the approved test list and reported before the commit.
+- **Lessons / limitations:**
+  - The owner ran every case by hand with `curl.exe`; one start-up failure
+    turned out to be a leftover `CORS_ORIGINS=*` in the terminal, which the
+    validation correctly rejected.
+  - CORS only protects browsers: a request without `Origin` (curl, the
+    mobile app) is still answered; authentication protects the data.
+  - Production allows `http://localhost:5173` until the panel has a public
+    origin (client #77).
+
 ## 3. Critical evaluation
 
 To be completed at the end of the project.
