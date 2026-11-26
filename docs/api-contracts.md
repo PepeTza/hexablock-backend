@@ -420,16 +420,19 @@ Fit class diagram.
 | `tray.size` | integer, always `1` in v1 | Stacks the tray offers at a time: one, as the statement and RN-20 say |
 | `tray.minHeight`, `tray.maxHeight` | integers, 1–9, `minHeight ≤ maxHeight` | Height range of the stacks generated with the seed |
 | `tray.maxColorsPerStack` | integer, 1 to `colors` | Most different colors a generated stack can have. An upper bound, so it may exceed `maxHeight`: a stack of height 2 never has more than 2 colors |
-| `goals` | integer, 1–99 | Stacks removed (10 or more chips of one color) needed to win (RN-24) |
+| `goals` | integer, 1–99 | Stacks removed as goals (RN-23) needed to win (RN-24) |
 
 Cells use the axial coordinates `q, r` of the client engine (`HexCoord`). A
 cell is on the board when `max(|q|, |r|, |q + r|) ≤ radius`. Source: Red
 Blob Games, "Hexagonal Grids", sections "Axial coordinates" and "Distances"
 (https://www.redblobgames.com/grids/hexagons/).
 
-When a stack gathers 10 or more chips of the same color, the **whole stack** is
-removed from the board and counts as one goal, as the project statement says.
-Stacks start with at most 9 chips, so no stack can start already complete.
+When the top run of a stack (its contiguous same-color chips on top) reaches 10
+or more, the **whole stack** is removed, chips under the run included, and
+counts as one goal (RN-23). Chips of that color buried under other colors do
+not count. The client holds that size (`DEFAULT_CLEAR_AT`); the level spec has
+no field for it. Stacks start with at most 9 chips, so no stack can start
+already complete.
 Colors are indexes, not names or codes, so the client can change its palette
 (theme, color blindness) without touching published levels (RN-37).
 
