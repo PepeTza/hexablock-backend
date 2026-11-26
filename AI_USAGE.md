@@ -441,6 +441,10 @@ One entry per significant use. Copy the template.
     owner approved `api`, the scope used before for this file.
   - Two validation cases (a value that is not a URL, an empty entry) were
     added beyond the approved test list and reported before the commit.
+  - The gate 4 review by a separate agent found the `Refs` footers without
+    a colon (reworded before the push), a missing preflight test for an
+    unlisted origin, and CORS answering every preflight even with no origin
+    listed; the last two were fixed in their own commits.
 - **Lessons / limitations:**
   - The owner ran every case by hand with `curl.exe`; one start-up failure
     turned out to be a leftover `CORS_ORIGINS=*` in the terminal, which the
@@ -449,6 +453,8 @@ One entry per significant use. Copy the template.
     mobile app) is still answered; authentication protects the data.
   - Production allows `http://localhost:5173` until the panel has a public
     origin (client #77).
+  - The panel cannot read `X-Request-Id` or `Retry-After` yet (not
+    CORS-safelisted); `exposedHeaders` is left for #52.
 
 ## 3. Critical evaluation
 
