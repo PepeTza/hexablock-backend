@@ -14,6 +14,11 @@ export interface Environment {
    * `0` (the default) trusts none; Render sets `1` (D-10).
    */
   readonly trustProxyHops: number;
+  /**
+   * Browser origins allowed to call the API cross-origin (the admin panel).
+   * Empty (the default) allows none.
+   */
+  readonly corsOrigins: readonly string[];
 }
 
 const DEFAULT_PORT = 3000;
@@ -25,6 +30,7 @@ const MIN_JWT_SECRET_LENGTH = 32;
 // Render needs 1 hop (D-10). The cap is not a platform limit: it rejects a
 // typo that would trust hops a client can fake.
 const MAX_TRUST_PROXY_HOPS = 5;
+const HTTP_PROTOCOLS = ['http:', 'https:'];
 
 /**
  * Turns the raw environment variables into a typed `Environment`.
@@ -44,11 +50,40 @@ export function validateEnvironment(
     variables.TRUST_PROXY_HOPS,
     problems,
   );
+  const corsOrigins = readCorsOrigins(variables.CORS_ORIGINS, problems);
 
   if (problems.length > 0) {
     throw new Error(`Invalid environment: ${problems.join('; ')}`);
   }
-  return { databaseUrl, port, nodeEnv, jwtSecret, trustProxyHops };
+  return { databaseUrl, port, nodeEnv, jwtSecret, trustProxyHops, corsOrigins };
+}
+
+function readCorsOrigins(value: unknown, problems: string[]): string[] {
+  if (value === undefined || value === '') {
+    return [];
+  }
+  const origins =
+    typeof value === 'string' ? value.split(',').map((o) => o.trim()) : [];
+  if (origins.length === 0 || !origins.every(isOrigin)) {
+    problems.push(
+      'CORS_ORIGINS must be a comma list of http(s)://host[:port] origins',
+    );
+  }
+  return origins;
+}
+
+/**
+ * True for a bare origin such as `https://host:8080`: the form browsers send
+ * in the Origin header, so no path, query or trailing slash, and never `*`.
+ * Source: IETF, RFC 6454 "The Web Origin Concept", §7:
+ * https://www.rfc-editor.org/rfc/rfc6454#section-7
+ */
+function isOrigin(value: string): boolean {
+  if (!URL.canParse(value)) {
+    return false;
+  }
+  const url = new URL(value);
+  return HTTP_PROTOCOLS.includes(url.protocol) && url.origin === value;
 }
 
 function readTrustProxyHops(value: unknown, problems: string[]): number {
