@@ -80,6 +80,35 @@ describe('CORS (e2e)', () => {
     expect(response.headers['access-control-allow-origin']).toBeUndefined();
   });
 
+  it('should_tag_the_preflight_with_a_request_id_when_the_origin_is_configured', async () => {
+    // Arrange
+    app = await createTestApp({ corsOrigins: [PANEL_ORIGIN] });
+
+    // Act
+    const response = await request(app.getHttpServer())
+      .options(HEALTH_PATH)
+      .set('Origin', PANEL_ORIGIN)
+      .set('Access-Control-Request-Method', 'PUT');
+
+    // Assert
+    expect(response.headers['x-request-id']).toBeDefined();
+  });
+
+  it('should_not_answer_the_preflight_when_no_origin_is_configured', async () => {
+    // Arrange
+    app = await createTestApp();
+
+    // Act
+    const response = await request(app.getHttpServer())
+      .options(HEALTH_PATH)
+      .set('Origin', PANEL_ORIGIN)
+      .set('Access-Control-Request-Method', 'PUT');
+
+    // Assert
+    expect(response.headers['access-control-allow-origin']).toBeUndefined();
+    expect(response.headers['access-control-allow-methods']).toBeUndefined();
+  });
+
   it('should_send_no_cors_header_when_no_origin_is_configured', async () => {
     // Arrange
     app = await createTestApp();

@@ -31,18 +31,6 @@ export function configureApp(
 ): void {
   // Do not announce the server technology (decision 22).
   app.disable('x-powered-by');
-  // The browser blocks a page on another origin (the admin panel) from
-  // reading API responses unless the API names that origin. Only the listed
-  // origins get the CORS headers; with none listed, no page gets them. The
-  // API authenticates with a Bearer token, not cookies, so credentials stay
-  // off. Source: MDN, "Cross-Origin Resource Sharing (CORS)":
-  // https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/CORS
-  app.enableCors({
-    origin: [...corsOrigins],
-    methods: ['GET', 'POST', 'PUT'],
-    allowedHeaders: ['Authorization', 'Content-Type'],
-    credentials: false,
-  });
   // Behind N proxies, each appends the caller's IP to X-Forwarded-For.
   // Trusting exactly N hops makes `req.ip` the real client, so rate limits
   // count each player apart; trusting more (or `true`) would let a client
@@ -51,6 +39,22 @@ export function configureApp(
   // behind proxies": https://expressjs.com/en/guide/behind-proxies.html
   app.set('trust proxy', trustProxyHops);
   app.use(requestIdMiddleware);
+  // The browser blocks a page on another origin (the admin panel) from
+  // reading API responses unless the API names that origin. Only the listed
+  // origins get the CORS headers; with none listed, CORS stays off and a
+  // preflight is answered as before. Registered after the request id, so
+  // preflights carry one too. The API authenticates with a Bearer token,
+  // not cookies, so credentials stay off. Source: MDN, "Cross-Origin
+  // Resource Sharing (CORS)":
+  // https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/CORS
+  if (corsOrigins.length > 0) {
+    app.enableCors({
+      origin: [...corsOrigins],
+      methods: ['GET', 'POST', 'PUT'],
+      allowedHeaders: ['Authorization', 'Content-Type'],
+      credentials: false,
+    });
+  }
   app.useGlobalFilters(new AllExceptionsFilter());
   app.useGlobalInterceptors(new RequestLoggingInterceptor());
   // Aspect: every body is checked against its DTO before reaching a handler.
