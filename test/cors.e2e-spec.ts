@@ -66,6 +66,20 @@ describe('CORS (e2e)', () => {
     expect(response.headers['access-control-allow-origin']).toBeUndefined();
   });
 
+  it('should_send_no_allow_origin_on_preflight_when_the_origin_is_not_configured', async () => {
+    // Arrange
+    app = await createTestApp({ corsOrigins: [PANEL_ORIGIN] });
+
+    // Act
+    const response = await request(app.getHttpServer())
+      .options(HEALTH_PATH)
+      .set('Origin', OTHER_ORIGIN)
+      .set('Access-Control-Request-Method', 'PUT');
+
+    // Assert
+    expect(response.headers['access-control-allow-origin']).toBeUndefined();
+  });
+
   it('should_send_no_cors_header_when_no_origin_is_configured', async () => {
     // Arrange
     app = await createTestApp();
