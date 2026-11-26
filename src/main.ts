@@ -9,11 +9,11 @@ import { configureApp } from './frameworks/configure-app';
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   const config = app.get<ConfigService<Environment, true>>(ConfigService);
-  configureApp(
-    app,
-    config.get('nodeEnv', { infer: true }),
-    config.get('trustProxyHops', { infer: true }),
-  );
+  configureApp(app, {
+    nodeEnv: config.get('nodeEnv', { infer: true }),
+    trustProxyHops: config.get('trustProxyHops', { infer: true }),
+    corsOrigins: config.get('corsOrigins', { infer: true }),
+  });
   // Render sends SIGTERM before it stops or replaces an instance. With the
   // hooks on, Nest runs `app.close()`, so `PrismaService.onModuleDestroy()`
   // closes the pool cleanly. Only here, not in `configureApp`, so the e2e
