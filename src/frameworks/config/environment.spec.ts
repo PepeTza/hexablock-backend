@@ -25,6 +25,7 @@ describe('validateEnvironment', () => {
       nodeEnv: 'development',
       jwtSecret: VALID_JWT_SECRET,
       trustProxyHops: 0,
+      corsOrigins: [],
     });
   });
 
@@ -199,4 +200,49 @@ describe('validateEnvironment', () => {
       expect(act).toThrow(message);
     },
   );
+
+  it.each([undefined, ''])(
+    'should_allow_no_cors_origin_when_cors_origins_is_%j',
+    (value) => {
+      // Act
+      const environment = validateEnvironment({
+        ...REQUIRED,
+        CORS_ORIGINS: value,
+      });
+
+      // Assert
+      expect(environment.corsOrigins).toEqual([]);
+    },
+  );
+
+  it('should_read_a_trimmed_comma_list_of_cors_origins', () => {
+    // Act
+    const environment = validateEnvironment({
+      ...REQUIRED,
+      CORS_ORIGINS: ' http://localhost:5173 , https://panel.example.com ',
+    });
+
+    // Assert
+    expect(environment.corsOrigins).toEqual([
+      'http://localhost:5173',
+      'https://panel.example.com',
+    ]);
+  });
+
+  it.each([
+    ['a wildcard', '*'],
+    ['a path', 'http://localhost:5173/admin'],
+    ['a trailing slash', 'http://localhost:5173/'],
+    ['a non-http scheme', 'ftp://localhost:5173'],
+    ['a value that is not a URL', 'localhost:5173'],
+    ['an empty entry', 'http://localhost:5173,,https://panel.example.com'],
+  ])('should_throw_when_cors_origins_has_%s', (_case, value) => {
+    // Act
+    const act = () => validateEnvironment({ ...REQUIRED, CORS_ORIGINS: value });
+
+    // Assert
+    expect(act).toThrow(
+      'CORS_ORIGINS must be a comma list of http(s)://host[:port] origins',
+    );
+  });
 });
