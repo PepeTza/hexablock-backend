@@ -26,3 +26,4 @@ details live in the PR.
 | 2026-11-23 | Design-for-change rule | #48 | PepeTza | 156/156 unit (docs only) | Twin of client #162: added the design-for-change rule to CONTRIBUTING.md §4 and AGENTS.md §4 |
 | 2026-11-24 | List and publish levels | #34 | KeneFu | 210/210 unit, 79/79 e2e | Generic `RolesGuard` + `@Roles('admin')`; one spec validator Strategy per game and schema version (Hexa Sort v1 now, Hexa Fit after #60); advisory lock per game for `order = last + 1`; merge after #63 |
 | 2026-11-24 | Get and configure the seed config | #28 | KeneFu | 225/225 unit, 100/100 e2e | Public GET and admin PUT; per game or per level derived from traits (`seedScopeOf`), not names; never configured = random with `updatedAt: null` (contract §7); advisory lock per target; stacked on #34 |
+| 2026-11-26 | Align Hexa Sort goals in the contract | #71 | KeneFu | — (docs only) | §6 describes the top-run goal rule from client #73; the goals field no longer repeats the size |
