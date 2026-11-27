@@ -13,20 +13,23 @@ A separate read-only agent with a clean context (`review` subagent in Claude Cod
 
 ## Do not duplicate ESLint
 
-Do **not** report issues already enforced by ESLint (`any`, `as` casts, `!` non-null assertions, `instanceof` in restricted layers, or layer import boundaries).
+Do **not** report issues already enforced by ESLint (`any`, `as` casts, `!` non-null assertions, `instanceof` in restricted layers, `Math.random` in production code, or layer import boundaries).
 
 ## What to read
 
 - The diff (`git diff main...HEAD` or `gh pr diff <number>`) and the full files it touches.
 - When a rule value or contract may be duplicated across repositories, check the sibling repository (`../hexablock-client` or `../hexablock-backend`).
+- The architecture docs (`docs/architecture.md`, `docs/EXTENSIBILITY.md`) live in the client repository (`../hexablock-client/docs/` from the backend).
 
 ## Checks
 
-1. **Architecture & generics:** generic engine or variant logic coupled to `HexCoord`/`HexBoard` instead of `TCoord extends ICoord`; business rules in UI components, screens, presenters, or HTTP controllers; missing `CommandService`/`AsyncCommandService` + `Either` or missing aspects in the composition root.
+1. **Architecture & generics:** generic engine or variant logic coupled to `HexCoord`/`HexBoard` instead of `TCoord extends ICoord`; business rules in UI components, screens, presenters, or HTTP controllers; missing `CommandService`/`AsyncCommandService` + `Either` or missing aspects in the composition root; a port used but missing from the ports table (`docs/architecture.md` §2: a new port is added there first); a new variant that changes the contracts of the shared engine or game use cases instead of supplying its own types, rules, factory and presentation (`docs/EXTENSIBILITY.md` §1).
 2. **Design for change:** game-rule values (board size, tray size, limits, counts, scoring weights/constants) hardcoded or duplicated across files or repositories instead of level spec/configuration.
 3. **Contracts & docs:** API endpoint, DTO, or error-code changes without updating `docs/api-contracts.md`; added or removed patterns without updating `docs/architecture.md`.
-4. **Tests:** tests that would still pass if the implementation were broken, deleted or weakened existing tests, or unseeded randomness.
+4. **Tests:** tests that would still pass if the implementation were broken, deleted or weakened existing tests, or unseeded randomness; a bug fix without a test that fails without the fix (`CONTRIBUTING.md` §5); names or structure outside the `aaa-test` skill.
 5. **Scope & traceability:** out-of-scope edits, missing `AI-Assisted` commit footer when AI was used, or missing `harness/phase-log.md` row.
+6. **Backend:** cross-cutting concerns outside guards, interceptors and exception filters (`docs/architecture.md` §6); a repository that lets a database (Prisma) error reach a use case instead of translating it into an application error (dependency rule, `docs/architecture.md` §2; backend `AGENTS.md` §3).
+7. **Naming & docs:** names outside the table of `CONTRIBUTING.md` §4 or the glossary terms; a new pattern not named in its class doc comment; a non-trivial algorithm or external source not cited (`AGENTS.md` §4).
 
 ## Output rules
 
