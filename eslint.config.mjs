@@ -42,6 +42,18 @@ export default tseslint.config(
         { assertionStyle: 'never' },
       ],
       '@typescript-eslint/no-non-null-assertion': 'error',
+      // AGENTS.md §4, RN-05: randomness never hides in production code. The
+      // backend stores seeds and the client draws them, so the API never
+      // needs Math.random. Also catches `const { random } = Math`.
+      'no-restricted-properties': [
+        'error',
+        {
+          object: 'Math',
+          property: 'random',
+          message:
+            'Do not call Math.random in production code; the backend stores seeds and never draws random values (RN-05). If it ever must, add a port in src/application/ports and inject it (AGENTS.md §4).',
+        },
+      ],
     },
   },
   {
