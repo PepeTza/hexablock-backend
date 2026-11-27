@@ -126,7 +126,8 @@ The full rules are in [`CONTRIBUTING.md`](./CONTRIBUTING.md).
   not change. Values from the game rules or the statement (board size and
   shape, limits, counts, formulas) are data, not scattered constants.
 - Randomness always goes through an injected, seedable random source, so
-  tests are deterministic.
+  tests are deterministic — `Math.random` is banned in production code by
+  ESLint.
 - Tests: `should_<result>_when_<condition>`, Arrange / Act / Assert. You
   propose the test cases in the plan, with one plain-language line per case
   saying what it protects; the team approves the list before you write them.
