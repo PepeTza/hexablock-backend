@@ -456,6 +456,21 @@ One entry per significant use. Copy the template.
   - The panel cannot read `X-Request-Id` or `Retry-After` yet (not
     CORS-safelisted); `exposedHeaders` is left for #52.
 
+### 2026-11-23 — Hexa Fit level format proposal
+
+- **Tool / model:** Codex, Antigravity (Gemini 4 Neon).
+- **Issue / PR:** #32 (Fit review from #45, PR #66).
+- **Prompt:** Document the Fit schema and align the server format checks
+  and 400 vs 422 boundary with the merged `POST /levels` DTO.
+- **Result:** Drafted version 1, listed each validation error and aligned
+  the outer request envelope (`400`, including non-object `spec`) versus
+  level spec content (`422`) with `PublishLevelRequest`.
+- **Team modifications:** PepeTza requested explicit error conditions.
+  Kenneth's Hexa Sort schema and `POST /levels` endpoint (#34) are in main.
+- **Lessons / limitations:** The example uses a catalog shape that covers
+  the figure. The contract separates shape ID syntax from catalog membership
+  and playability. The Fit server validator follows in #34 once approved.
+
 ## 3. Critical evaluation
 
 To be completed at the end of the project.
